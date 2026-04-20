@@ -1,22 +1,19 @@
 'use client'
 
 import { useState } from 'react'
+import { AppProvider, useApp } from '@/context/app-context'
 import { ClientPage } from '@/components/client/client-page'
 import { OwnerDashboard } from '@/components/owner/owner-dashboard'
 import { AdminDashboard } from '@/components/admin/admin-dashboard'
 import { LoginModal } from '@/components/auth/login-modal'
 import type { Role } from '@/types'
 
-export default function Home() {
-  const [role, setRole] = useState<Role | null>(null)
+function AppContent() {
+  const { role, logout } = useApp()
   const [loginOpen, setLoginOpen] = useState(false)
 
-  const handleLogin = (r: Role) => {
-    setLoginOpen(false)
-    setRole(r)
-  }
-
-  const handleLogout = () => setRole(null)
+  const handleLogin = (_r: Role) => setLoginOpen(false)
+  const handleLogout = () => logout()
 
   if (role === 'owner') {
     return <OwnerDashboard onLogout={handleLogout} />
@@ -39,5 +36,13 @@ export default function Home() {
         onLogin={handleLogin}
       />
     </>
+  )
+}
+
+export default function Home() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   )
 }

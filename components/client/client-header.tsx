@@ -6,6 +6,7 @@ interface ClientHeaderProps {
   isAuthenticated: boolean
   onLogin?: () => void
   onLogout?: () => void
+  onReservations?: () => void
 }
 
 export function ClientHeader({
@@ -13,6 +14,7 @@ export function ClientHeader({
   isAuthenticated,
   onLogin,
   onLogout,
+  onReservations,
 }: ClientHeaderProps) {
   return (
     <header
@@ -30,9 +32,14 @@ export function ClientHeader({
           <button className="text-muted-foreground hover:text-foreground transition-colors font-body text-sm">
             Explorer
           </button>
-          <button className="text-muted-foreground hover:text-foreground transition-colors font-body text-sm">
-            Mes réservations
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={onReservations}
+              className="text-muted-foreground hover:text-foreground transition-colors font-body text-sm"
+            >
+              Mes réservations
+            </button>
+          )}
         </nav>
 
         <div className="flex items-center gap-3">

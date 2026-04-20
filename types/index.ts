@@ -1,6 +1,14 @@
 export type Role = 'client' | 'owner' | 'admin'
 
-export type BookingStatus = 'pending' | 'confirmed' | 'refused'
+export type BookingStatus = 'pending' | 'confirmed' | 'refused' | 'cancelled'
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  password: string
+  role: Role
+}
 
 export interface Hall {
   id: string

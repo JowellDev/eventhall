@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { ClientHeader } from './client-header'
+import { ClientReservations } from './client-reservations'
 import { HallSearchBar } from '@/components/halls/hall-search-bar'
 import { HallGrid } from '@/components/halls/hall-grid'
 import { HallDetailModal } from '@/components/halls/hall-detail-modal'
 import { BookingModal } from '@/components/booking/booking-modal'
 import { useFavorites } from '@/hooks/use-favorites'
 import { useHallSearch } from '@/hooks/use-hall-search'
+import { useApp } from '@/context/app-context'
 import type { Hall } from '@/types'
 
 interface ClientPageProps {
@@ -23,10 +25,12 @@ export function ClientPage({
   onLogin,
   onLogout,
 }: ClientPageProps) {
+  const { halls } = useApp()
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites()
-  const { searchQuery, setSearchQuery, filteredHalls } = useHallSearch()
+  const { searchQuery, setSearchQuery, filteredHalls } = useHallSearch(halls)
   const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
   const [modal, setModal] = useState<ModalState>(null)
+  const [showReservations, setShowReservations] = useState(false)
 
   const openDetail = (hall: Hall) => {
     setSelectedHall(hall)
@@ -46,6 +50,14 @@ export function ClientPage({
     setModal('booking')
   }
 
+  const handleReservations = () => {
+    if (!isAuthenticated) {
+      onLogin?.()
+      return
+    }
+    setShowReservations(true)
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <ClientHeader
@@ -53,6 +65,7 @@ export function ClientPage({
         isAuthenticated={isAuthenticated}
         onLogin={onLogin}
         onLogout={onLogout}
+        onReservations={handleReservations}
       />
 
       <main>
@@ -98,6 +111,10 @@ export function ClientPage({
 
       {modal === 'booking' && selectedHall && (
         <BookingModal hall={selectedHall} onClose={closeModal} />
+      )}
+
+      {showReservations && (
+        <ClientReservations onClose={() => setShowReservations(false)} />
       )}
     </div>
   )

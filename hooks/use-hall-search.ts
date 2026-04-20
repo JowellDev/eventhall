@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
-import { halls } from '@/lib/mock-data'
+import type { Hall } from '@/types'
 
-export function useHallSearch() {
+export function useHallSearch(halls: Hall[]) {
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredHalls = useMemo(
@@ -11,7 +11,7 @@ export function useHallSearch() {
           h.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           h.location.toLowerCase().includes(searchQuery.toLowerCase()),
       ),
-    [searchQuery],
+    [halls, searchQuery],
   )
 
   return { searchQuery, setSearchQuery, filteredHalls }

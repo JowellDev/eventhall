@@ -2,10 +2,12 @@
 
 import { X, ArrowLeft } from 'lucide-react'
 import { useBooking } from '@/hooks/use-booking'
+import { useApp } from '@/context/app-context'
 import { BookingStepDatetime } from './booking-step-datetime'
 import { BookingStepPackages } from './booking-step-packages'
 import { BookingStepReview } from './booking-step-review'
 import { BookingConfirmation } from './booking-confirmation'
+import { packages } from '@/lib/mock-data'
 import type { Hall } from '@/types'
 
 interface BookingModalProps {
@@ -16,8 +18,29 @@ interface BookingModalProps {
 const STEP_LABELS = ['Date & Heure', 'Options', 'Récapitulatif']
 
 export function BookingModal({ hall, onClose }: BookingModalProps) {
+  const { currentUser, addBooking } = useApp()
   const { step, setStep, data, setData, confirmed, togglePackage, calculateTotal, confirm, goBack } =
     useBooking()
+
+  const handleConfirm = () => {
+    const start = parseInt(data.startTime.split(':')[0] ?? '0')
+    const end = parseInt(data.endTime.split(':')[0] ?? '0')
+    const duration = end > start ? end - start : 0
+    addBooking({
+      hallId: hall.id,
+      hallName: hall.name,
+      client: currentUser?.name ?? 'Client',
+      date: data.date,
+      time: `${data.startTime} - ${data.endTime}`,
+      duration,
+      status: 'pending',
+      total: calculateTotal(hall),
+      packages: data.selectedPackages.map(
+        (id) => packages.find((p) => p.id === id)?.label ?? id,
+      ),
+    })
+    confirm()
+  }
 
   return (
     <div
@@ -118,7 +141,7 @@ export function BookingModal({ hall, onClose }: BookingModalProps) {
               hall={hall}
               data={data}
               total={calculateTotal(hall)}
-              onConfirm={confirm}
+              onConfirm={handleConfirm}
             />
           )}
         </div>

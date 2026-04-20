@@ -1,6 +1,6 @@
 import type { BookingStatus } from '@/types'
 
-type OwnerStatus = 'active' | 'pending'
+type OwnerStatus = 'active'
 type StatusVariant = BookingStatus | OwnerStatus
 
 const CONFIG: Record<
@@ -24,6 +24,12 @@ const CONFIG: Record<
     color: '#d4af37',
     bg: 'rgba(212,175,55,0.1)',
     border: 'rgba(212,175,55,0.3)',
+  },
+  cancelled: {
+    label: 'Annulée',
+    color: '#94a3b8',
+    bg: 'rgba(148,163,184,0.1)',
+    border: 'rgba(148,163,184,0.3)',
   },
   active: {
     label: 'Actif',
