@@ -40,7 +40,6 @@ export default function RootLayout({
 		<html lang="fr" className={`${montserrat.variable} bg-background`}>
 			<body className="font-sans antialiased bg-background text-foreground">
 				{children}
-				
 			</body>
 		</html>
 	)
