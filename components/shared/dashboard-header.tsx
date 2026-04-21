@@ -1,3 +1,7 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 import { AppLogo } from './app-logo'
 
@@ -10,8 +14,7 @@ interface DashboardHeaderProps {
 	subtitle?: string
 	badge?: React.ReactNode
 	tabs: Tab[]
-	activeTab: string
-	onTabChange: (key: string) => void
+	basePath: string
 	onLogout: () => void
 }
 
@@ -19,10 +22,21 @@ export function DashboardHeader({
 	subtitle,
 	badge,
 	tabs,
-	activeTab,
-	onTabChange,
+	basePath,
 	onLogout,
 }: DashboardHeaderProps) {
+	const pathname = usePathname()
+
+	const isActive = (key: string) => pathname === `${basePath}/${key}`
+
+	const tabStyle = (key: string) => ({
+		background: isActive(key) ? 'rgba(212,175,55,0.12)' : 'transparent',
+		color: isActive(key) ? '#d4af37' : 'var(--muted-foreground)',
+		border: isActive(key)
+			? '1px solid rgba(212,175,55,0.2)'
+			: '1px solid transparent',
+	})
+
 	return (
 		<header
 			className="sticky top-0 z-40 border-b"
@@ -45,25 +59,14 @@ export function DashboardHeader({
 
 				<nav className="hidden md:flex items-center gap-1">
 					{tabs.map(tab => (
-						<button
+						<Link
 							key={tab.key}
-							onClick={() => onTabChange(tab.key)}
+							href={`${basePath}/${tab.key}`}
 							className="px-4 py-2 rounded-xl text-sm font-body font-medium transition-all"
-							style={{
-								background:
-									activeTab === tab.key
-										? 'rgba(212,175,55,0.12)'
-										: 'transparent',
-								color:
-									activeTab === tab.key ? '#d4af37' : 'var(--muted-foreground)',
-								border:
-									activeTab === tab.key
-										? '1px solid rgba(212,175,55,0.2)'
-										: '1px solid transparent',
-							}}
+							style={tabStyle(tab.key)}
 						>
 							{tab.label}
-						</button>
+						</Link>
 					))}
 				</nav>
 
@@ -80,23 +83,14 @@ export function DashboardHeader({
 			{/* Mobile tab nav */}
 			<div className="md:hidden flex overflow-x-auto px-4 pb-3 gap-1">
 				{tabs.map(tab => (
-					<button
+					<Link
 						key={tab.key}
-						onClick={() => onTabChange(tab.key)}
+						href={`${basePath}/${tab.key}`}
 						className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-body font-medium transition-all"
-						style={{
-							background:
-								activeTab === tab.key ? 'rgba(212,175,55,0.12)' : 'transparent',
-							color:
-								activeTab === tab.key ? '#d4af37' : 'var(--muted-foreground)',
-							border:
-								activeTab === tab.key
-									? '1px solid rgba(212,175,55,0.2)'
-									: '1px solid transparent',
-						}}
+						style={tabStyle(tab.key)}
 					>
 						{tab.label}
-					</button>
+					</Link>
 				))}
 			</div>
 		</header>

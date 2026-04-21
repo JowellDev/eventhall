@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
 	Building2,
 	CalendarDays,
@@ -8,20 +9,11 @@ import {
 	UserCog,
 	ShieldCheck,
 } from 'lucide-react'
+import { useApp } from '@/context/app-context'
 import { DashboardHeader } from '@/components/shared/dashboard-header'
 import { KpiCard } from '@/components/shared/kpi-card'
-import { AdminOverview } from './admin-overview'
-import { AdminOwnersTab } from './admin-owners-tab'
-import { AdminHallsTab } from './admin-halls-tab'
-import { AdminAnalyticsTab } from './admin-analytics-tab'
 
-interface AdminDashboardProps {
-	onLogout: () => void
-}
-
-type Tab = 'overview' | 'owners' | 'halls' | 'analytics'
-
-const TABS: { key: Tab; label: string }[] = [
+const TABS = [
 	{ key: 'overview', label: "Vue d'ensemble" },
 	{ key: 'owners', label: 'Propriétaires' },
 	{ key: 'halls', label: 'Salles' },
@@ -73,30 +65,42 @@ const AdminBadge = () => (
 	</div>
 )
 
-export function AdminDashboard({ onLogout }: AdminDashboardProps) {
-	const [activeTab, setActiveTab] = useState<Tab>('overview')
+export default function AdminLayout({
+	children,
+}: {
+	children: React.ReactNode
+}) {
+	const { role, isHydrated, logout } = useApp()
+	const router = useRouter()
+
+	useEffect(() => {
+		if (!isHydrated) return
+		if (!role) router.replace('/login')
+		else if (role !== 'admin') router.replace(`/${role}`)
+	}, [role, isHydrated, router])
+
+	const handleLogout = () => {
+		logout()
+		router.push('/')
+	}
+
+	if (!isHydrated || !role) return null
 
 	return (
 		<div className="min-h-screen bg-background">
 			<DashboardHeader
 				badge={<AdminBadge />}
 				tabs={TABS}
-				activeTab={activeTab}
-				onTabChange={key => setActiveTab(key as Tab)}
-				onLogout={onLogout}
+				basePath="/admin"
+				onLogout={handleLogout}
 			/>
-
 			<main className="max-w-7xl mx-auto px-4 py-4 md:py-8">
 				<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 					{KPIS.map(kpi => (
 						<KpiCard key={kpi.label} {...kpi} />
 					))}
 				</div>
-
-				{activeTab === 'overview' && <AdminOverview />}
-				{activeTab === 'owners' && <AdminOwnersTab />}
-				{activeTab === 'halls' && <AdminHallsTab />}
-				{activeTab === 'analytics' && <AdminAnalyticsTab />}
+				{children}
 			</main>
 		</div>
 	)
