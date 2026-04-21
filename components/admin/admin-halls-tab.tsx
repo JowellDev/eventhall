@@ -1,8 +1,16 @@
+'use client'
+
 import { Star } from 'lucide-react'
 import { halls, formatPrice } from '@/lib/mock-data'
+import { Pagination } from '@/components/shared/pagination'
+import { usePagination } from '@/hooks/use-pagination'
+
+const ALL_HALLS = [...halls, ...halls].slice(0, 6)
+const PAGE_SIZE_OPTIONS = [6, 12, 24]
 
 export function AdminHallsTab() {
-  const displayHalls = [...halls, ...halls].slice(0, 6)
+  const { page, setPage, pageSize, setPageSize, paginatedItems, totalPages, total, from, to } =
+    usePagination(ALL_HALLS, 6)
 
   return (
     <div>
@@ -10,7 +18,7 @@ export function AdminHallsTab() {
         Toutes les salles
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {displayHalls.map((hall, i) => (
+        {paginatedItems.map((hall, i) => (
           <div
             key={`${hall.id}-${i}`}
             className="rounded-2xl overflow-hidden border"
@@ -43,6 +51,17 @@ export function AdminHallsTab() {
           </div>
         ))}
       </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        from={from}
+        to={to}
+        total={total}
+        pageSize={pageSize}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
     </div>
   )
 }

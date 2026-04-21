@@ -42,7 +42,7 @@ export function OwnerDashboard({ onLogout }: OwnerDashboardProps) {
         onLogout={onLogout}
       />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-4 md:py-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {KPIS.map((kpi) => (
             <KpiCard key={kpi.label} {...kpi} />

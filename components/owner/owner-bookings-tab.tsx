@@ -4,15 +4,22 @@ import { useState } from 'react'
 import { CheckCircle2, XCircle } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/status-badge'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
+import { Pagination } from '@/components/shared/pagination'
+import { usePagination } from '@/hooks/use-pagination'
 import { useApp } from '@/context/app-context'
 import { formatPrice } from '@/lib/mock-data'
 import type { Booking } from '@/types'
+
+const PAGE_SIZE_OPTIONS = [5, 10, 25]
 
 type PendingAction = { booking: Booking; action: 'confirmed' | 'refused' } | null
 
 export function OwnerBookingsTab() {
   const { bookings, updateBookingStatus } = useApp()
   const [pendingAction, setPendingAction] = useState<PendingAction>(null)
+
+  const { page, setPage, pageSize, setPageSize, paginatedItems, totalPages, total, from, to } =
+    usePagination(bookings, 5)
 
   const confirmAction = () => {
     if (pendingAction) {
@@ -25,7 +32,7 @@ export function OwnerBookingsTab() {
     <div>
       <h2 className="font-display text-xl font-semibold text-foreground mb-6">Réservations</h2>
       <div className="space-y-4">
-        {bookings.map((booking) => (
+        {paginatedItems.map((booking) => (
           <div
             key={booking.id}
             className="rounded-2xl p-5 border"
@@ -84,6 +91,17 @@ export function OwnerBookingsTab() {
           </div>
         ))}
       </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        from={from}
+        to={to}
+        total={total}
+        pageSize={pageSize}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
 
       {pendingAction && (
         <ConfirmDialog

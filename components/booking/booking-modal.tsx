@@ -44,15 +44,19 @@ export function BookingModal({ hall, onClose }: BookingModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center sm:p-4"
       style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}
       role="dialog"
       aria-modal="true"
       aria-label="Réservation"
     >
       <div
-        className="relative w-full max-w-lg rounded-2xl overflow-hidden border"
-        style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.2)' }}
+        className="relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl overflow-hidden border border-b-0 sm:border-b flex flex-col"
+        style={{
+          background: '#1a1a1a',
+          borderColor: 'rgba(212,175,55,0.2)',
+          maxHeight: '92dvh',
+        }}
       >
         {/* Header */}
         <div className="p-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
@@ -121,7 +125,7 @@ export function BookingModal({ hall, onClose }: BookingModalProps) {
         </div>
 
         {/* Step content */}
-        <div className="p-5">
+        <div className="p-5 overflow-y-auto flex-1">
           {confirmed ? (
             <BookingConfirmation hallName={hall.name} onClose={onClose} />
           ) : step === 1 ? (

@@ -12,23 +12,6 @@ export const metadata: Metadata = {
 	title: 'EventHalls — Gérez vos événements avec élégance',
 	description:
 		"La plateforme premium de réservation de salles événementielles à Abidjan. Trouvez et réservez votre salle d'exception.",
-	icons: {
-		icon: [
-			{
-				url: '/icon-light-32x32.png',
-				media: '(prefers-color-scheme: light)',
-			},
-			{
-				url: '/icon-dark-32x32.png',
-				media: '(prefers-color-scheme: dark)',
-			},
-			{
-				url: '/icon.svg',
-				type: 'image/svg+xml',
-			},
-		],
-		apple: '/apple-icon.png',
-	},
 }
 
 export default function RootLayout({

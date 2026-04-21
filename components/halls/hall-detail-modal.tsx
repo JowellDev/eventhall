@@ -19,7 +19,7 @@ export function HallDetailModal({
 }: HallDetailModalProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center sm:p-4"
       style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}
       onClick={onClose}
       role="dialog"
@@ -27,12 +27,11 @@ export function HallDetailModal({
       aria-label={`Détails de ${hall.name}`}
     >
       <div
-        className="relative w-full max-w-xl rounded-2xl overflow-hidden border"
+        className="relative w-full sm:max-w-xl rounded-t-2xl sm:rounded-2xl overflow-y-auto border border-b-0 sm:border-b"
         style={{
           background: '#1a1a1a',
           borderColor: 'rgba(212,175,55,0.2)',
-          maxHeight: '90vh',
-          overflowY: 'auto',
+          maxHeight: '92dvh',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -94,7 +93,7 @@ export function HallDetailModal({
           <ul className="grid grid-cols-1 gap-2">
             {hall.services.map((s) => (
               <li key={s} className="flex items-center gap-2.5 text-sm font-body text-muted-foreground">
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: '#d4af37' }} />
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#d4af37' }} />
                 {s}
               </li>
             ))}

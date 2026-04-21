@@ -5,9 +5,13 @@ import { Star, Eye, Pencil, Trash2 } from 'lucide-react'
 import { AddHallModal } from './add-hall-modal'
 import { OwnerHallDetailModal } from './owner-hall-detail-modal'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
+import { Pagination } from '@/components/shared/pagination'
+import { usePagination } from '@/hooks/use-pagination'
 import { useApp } from '@/context/app-context'
 import { formatPrice } from '@/lib/mock-data'
 import type { Hall } from '@/types'
+
+const PAGE_SIZE_OPTIONS = [6, 12, 24]
 
 export function OwnerHallsTab() {
   const { halls, deleteHall } = useApp()
@@ -15,6 +19,9 @@ export function OwnerHallsTab() {
   const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
   const [editHall, setEditHall] = useState<Hall | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Hall | null>(null)
+
+  const { page, setPage, pageSize, setPageSize, paginatedItems, totalPages, total, from, to } =
+    usePagination(halls, 6)
 
   return (
     <div>
@@ -36,8 +43,9 @@ export function OwnerHallsTab() {
           </p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {halls.map((hall) => (
+          {paginatedItems.map((hall) => (
             <div
               key={hall.id}
               className="rounded-2xl overflow-hidden border"
@@ -96,6 +104,18 @@ export function OwnerHallsTab() {
             </div>
           ))}
         </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          from={from}
+          to={to}
+          total={total}
+          pageSize={pageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+        </>
       )}
 
       {showAddModal && <AddHallModal onClose={() => setShowAddModal(false)} />}

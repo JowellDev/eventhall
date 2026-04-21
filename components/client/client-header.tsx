@@ -1,4 +1,4 @@
-import { Calendar, Heart, Bell, LogOut } from 'lucide-react'
+import { Calendar, Heart, Bell, LogOut, BookOpen } from 'lucide-react'
 import { AppLogo } from '@/components/shared/app-logo'
 
 interface ClientHeaderProps {
@@ -47,9 +47,16 @@ export function ClientHeader({
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {isAuthenticated && (
             <>
+              <button
+                onClick={onReservations}
+                className="md:hidden p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
+                aria-label="Mes réservations"
+              >
+                <BookOpen className="w-5 h-5" />
+              </button>
               <button
                 onClick={onCalendar}
                 className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
@@ -93,20 +100,21 @@ export function ClientHeader({
           {isAuthenticated ? (
             <button
               onClick={onLogout}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
               style={{ borderColor: 'rgba(212,175,55,0.2)' }}
+              aria-label="Déconnexion"
             >
               <LogOut className="w-4 h-4" />
-              <span>Déconnexion</span>
+              <span className="hidden sm:inline">Déconnexion</span>
             </button>
           ) : (
             <button
               onClick={onLogin}
-              className="hidden md:flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-body font-semibold transition-opacity hover:opacity-90"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-body font-semibold transition-opacity hover:opacity-90"
               style={{ background: 'linear-gradient(135deg, #d4af37, #f4c430)', color: '#000' }}
             >
               <LogOut className="w-4 h-4 rotate-180" />
-              <span>Connexion</span>
+              <span className="hidden sm:inline">Connexion</span>
             </button>
           )}
         </div>

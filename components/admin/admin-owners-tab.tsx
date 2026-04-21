@@ -1,7 +1,11 @@
+'use client'
+
 import { Eye, Pencil } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/status-badge'
+import { Pagination } from '@/components/shared/pagination'
+import { usePagination } from '@/hooks/use-pagination'
 
-const owners = [
+const ALL_OWNERS = [
   { id: 'o1', name: 'Kouamé Jean-Paul', email: 'jp.kouame@mail.ci', halls: 3, revenue: '8.5M FCFA', status: 'active' as const },
   { id: 'o2', name: 'Traoré Fatou', email: 'f.traore@mail.ci', halls: 2, revenue: '5.2M FCFA', status: 'active' as const },
   { id: 'o3', name: 'Koffi Akissi', email: 'a.koffi@mail.ci', halls: 1, revenue: '2.1M FCFA', status: 'pending' as const },
@@ -9,7 +13,12 @@ const owners = [
   { id: 'o5', name: 'Assi Christiane', email: 'c.assi@mail.ci', halls: 2, revenue: '6.8M FCFA', status: 'active' as const },
 ]
 
+const PAGE_SIZE_OPTIONS = [5, 10, 25]
+
 export function AdminOwnersTab() {
+  const { page, setPage, pageSize, setPageSize, paginatedItems, totalPages, total, from, to } =
+    usePagination(ALL_OWNERS, 5)
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -24,7 +33,7 @@ export function AdminOwnersTab() {
         </button>
       </div>
       <div className="space-y-3">
-        {owners.map((owner) => (
+        {paginatedItems.map((owner) => (
           <div
             key={owner.id}
             className="flex flex-col md:flex-row md:items-center gap-4 rounded-2xl p-5 border"
@@ -32,7 +41,7 @@ export function AdminOwnersTab() {
           >
             <div className="flex items-center gap-3 flex-1">
               <div
-                className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 font-display font-bold text-base text-black"
+                className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-display font-bold text-base text-black"
                 style={{ background: 'linear-gradient(135deg, #d4af37, #f4c430)' }}
               >
                 {owner.name.charAt(0)}
@@ -42,7 +51,7 @@ export function AdminOwnersTab() {
                 <p className="text-xs text-muted-foreground font-body">{owner.email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-6 text-sm font-body">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm font-body">
               <div>
                 <p className="text-muted-foreground text-xs mb-0.5">Salles</p>
                 <p className="font-semibold text-foreground">{owner.halls}</p>
@@ -72,6 +81,17 @@ export function AdminOwnersTab() {
           </div>
         ))}
       </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        from={from}
+        to={to}
+        total={total}
+        pageSize={pageSize}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
     </div>
   )
 }

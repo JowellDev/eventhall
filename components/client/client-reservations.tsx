@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { X, AlertTriangle, Pencil, XCircle, ArrowLeft, CheckCircle2 } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/status-badge'
+import { Pagination } from '@/components/shared/pagination'
+import { usePagination } from '@/hooks/use-pagination'
 import { useApp } from '@/context/app-context'
 import { packages, formatPrice } from '@/lib/mock-data'
 import type { Booking, BookingFormData, BookingStatus } from '@/types'
@@ -95,7 +97,7 @@ function ModifyModal({
   if (saved) {
     return (
       <div
-        className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+        className="fixed inset-0 z-60 flex items-center justify-center p-4"
         style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}
       >
         <div
@@ -128,7 +130,7 @@ function ModifyModal({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      className="fixed inset-0 z-60 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}
       onClick={onClose}
     >
@@ -340,7 +342,7 @@ function CancelDialog({
 }) {
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      className="fixed inset-0 z-60 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}
       onClick={onClose}
     >
@@ -384,6 +386,8 @@ function CancelDialog({
   )
 }
 
+const PAGE_SIZE_OPTIONS = [5, 10, 25]
+
 /* ─── Main Component ─── */
 export function ClientReservations({ onClose }: ClientReservationsProps) {
   const { bookings, updateBookingStatus, updateBooking } = useApp()
@@ -396,6 +400,9 @@ export function ClientReservations({ onClose }: ClientReservationsProps) {
     if (filter === 'cancelled') return b.status === 'cancelled' || b.status === 'refused'
     return b.status === filter
   })
+
+  const { page, setPage, pageSize, setPageSize, paginatedItems, totalPages, total, from, to } =
+    usePagination(filtered, 5)
 
   const handleCancel = (booking: Booking) => setCancelTarget(booking)
   const confirmCancel = () => {
@@ -471,7 +478,7 @@ export function ClientReservations({ onClose }: ClientReservationsProps) {
             </div>
           ) : (
             <div className="max-w-2xl mx-auto space-y-4">
-              {filtered.map((booking) => (
+              {paginatedItems.map((booking) => (
                 <div
                   key={booking.id}
                   className="rounded-2xl p-5 border"
@@ -520,6 +527,17 @@ export function ClientReservations({ onClose }: ClientReservationsProps) {
                   </div>
                 </div>
               ))}
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                from={from}
+                to={to}
+                total={total}
+                pageSize={pageSize}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+                onPageChange={setPage}
+                onPageSizeChange={setPageSize}
+              />
             </div>
           )}
         </div>
