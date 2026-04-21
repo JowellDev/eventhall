@@ -1,9 +1,12 @@
 'use client'
 
-import { Star } from 'lucide-react'
+import { useState } from 'react'
+import { Star, Eye } from 'lucide-react'
 import { halls, formatPrice } from '@/lib/mock-data'
 import { Pagination } from '@/components/shared/pagination'
 import { usePagination } from '@/hooks/use-pagination'
+import { HallDetailModal } from '@/components/halls/hall-detail-modal'
+import type { Hall } from '@/types'
 
 const ALL_HALLS = [...halls, ...halls].slice(0, 6)
 const PAGE_SIZE_OPTIONS = [6, 12, 24]
@@ -20,6 +23,8 @@ export function AdminHallsTab() {
 		from,
 		to,
 	} = usePagination(ALL_HALLS, 6)
+
+	const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
 
 	return (
 		<div>
@@ -63,13 +68,26 @@ export function AdminHallsTab() {
 								{hall.location}
 							</span>
 						</div>
-						<div className="p-3">
-							<p className="font-display text-sm font-bold text-foreground mb-0.5">
-								{hall.name}
-							</p>
-							<p className="text-xs text-muted-foreground font-body">
-								{hall.capacity} pers. · {formatPrice(hall.pricePerHour)}/h
-							</p>
+						<div className="p-3 flex items-center justify-between gap-2">
+							<div className="min-w-0">
+								<p className="font-display text-sm font-bold text-foreground mb-0.5 truncate">
+									{hall.name}
+								</p>
+								<p className="text-xs text-muted-foreground font-body">
+									{hall.capacity} pers. · {formatPrice(hall.pricePerHour)}/h
+								</p>
+							</div>
+							<button
+								onClick={() => setSelectedHall(hall)}
+								className="shrink-0 p-1.5 rounded-lg border transition-all hover:border-gold"
+								style={{
+									borderColor: 'rgba(212,175,55,0.2)',
+									color: 'var(--muted-foreground)',
+								}}
+								aria-label={`Voir les détails de ${hall.name}`}
+							>
+								<Eye className="w-4 h-4" />
+							</button>
 						</div>
 					</div>
 				))}
@@ -85,6 +103,13 @@ export function AdminHallsTab() {
 				onPageChange={setPage}
 				onPageSizeChange={setPageSize}
 			/>
+
+			{selectedHall && (
+				<HallDetailModal
+					hall={selectedHall}
+					onClose={() => setSelectedHall(null)}
+				/>
+			)}
 		</div>
 	)
 }

@@ -12,16 +12,16 @@ import type { Hall } from '@/types'
 
 interface HallDetailModalProps {
 	hall: Hall
-	isFavorite: boolean
 	onClose: () => void
-	onToggleFavorite: (id: string) => void
-	onBook: () => void
+	isFavorite?: boolean
+	onToggleFavorite?: (id: string) => void
+	onBook?: () => void
 }
 
 export function HallDetailModal({
 	hall,
-	isFavorite,
 	onClose,
+	isFavorite,
 	onToggleFavorite,
 	onBook,
 }: HallDetailModalProps) {
@@ -145,32 +145,38 @@ export function HallDetailModal({
 				</div>
 
 				{/* Actions */}
-				<div className="px-5 pb-5 flex gap-3">
-					<button
-						onClick={() => onToggleFavorite(hall.id)}
-						className="flex-1 py-3 rounded-xl text-sm font-semibold font-body border transition-all hover:border-gold"
-						style={{
-							borderColor: 'rgba(212,175,55,0.3)',
-							color: isFavorite ? '#d4af37' : 'var(--muted-foreground)',
-						}}
-					>
-						<Heart
-							className="w-4 h-4 inline mr-2"
-							style={{ fill: isFavorite ? '#d4af37' : 'transparent' }}
-						/>
-						{isFavorite ? 'Dans les favoris' : 'Ajouter aux favoris'}
-					</button>
-					<button
-						onClick={onBook}
-						className="flex-1 py-3 rounded-xl text-sm font-semibold font-body transition-all hover:opacity-90"
-						style={{
-							background: 'linear-gradient(135deg, #d4af37, #f4c430)',
-							color: '#0a0a0a',
-						}}
-					>
-						Réserver maintenant
-					</button>
-				</div>
+				{(onToggleFavorite || onBook) && (
+					<div className="px-5 pb-5 flex gap-3">
+						{onToggleFavorite && (
+							<button
+								onClick={() => onToggleFavorite(hall.id)}
+								className="flex-1 py-3 rounded-xl text-sm font-semibold font-body border transition-all hover:border-gold"
+								style={{
+									borderColor: 'rgba(212,175,55,0.3)',
+									color: isFavorite ? '#d4af37' : 'var(--muted-foreground)',
+								}}
+							>
+								<Heart
+									className="w-4 h-4 inline mr-2"
+									style={{ fill: isFavorite ? '#d4af37' : 'transparent' }}
+								/>
+								{isFavorite ? 'Dans les favoris' : 'Ajouter aux favoris'}
+							</button>
+						)}
+						{onBook && (
+							<button
+								onClick={onBook}
+								className="flex-1 py-3 rounded-xl text-sm font-semibold font-body transition-all hover:opacity-90"
+								style={{
+									background: 'linear-gradient(135deg, #d4af37, #f4c430)',
+									color: '#0a0a0a',
+								}}
+							>
+								Réserver maintenant
+							</button>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	)

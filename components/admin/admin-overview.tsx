@@ -1,6 +1,5 @@
-import { Users, Globe, Eye, Pencil, Star } from 'lucide-react'
+import { Users, Globe, Star } from 'lucide-react'
 import { halls } from '@/lib/mock-data'
-import { StatusBadge } from '@/components/shared/status-badge'
 
 const owners = [
 	{
@@ -76,28 +75,6 @@ export function AdminOverview() {
 									{owner.halls} salle{owner.halls > 1 ? 's' : ''} ·{' '}
 									{owner.revenue}
 								</p>
-							</div>
-							<div className="flex gap-1.5">
-								<button
-									className="p-1.5 rounded-lg border transition-all hover:border-gold"
-									style={{
-										borderColor: 'rgba(212,175,55,0.2)',
-										color: 'var(--muted-foreground)',
-									}}
-									aria-label={`Voir ${owner.name}`}
-								>
-									<Eye className="w-3.5 h-3.5" />
-								</button>
-								<button
-									className="p-1.5 rounded-lg border transition-all hover:border-gold"
-									style={{
-										borderColor: 'rgba(212,175,55,0.2)',
-										color: 'var(--muted-foreground)',
-									}}
-									aria-label={`Modifier ${owner.name}`}
-								>
-									<Pencil className="w-3.5 h-3.5" />
-								</button>
 							</div>
 						</li>
 					))}
