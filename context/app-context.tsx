@@ -21,6 +21,8 @@ interface AppContextType {
   updatePassword: (email: string, newPassword: string) => boolean
   halls: Hall[]
   addHall: (data: Omit<Hall, 'id' | 'rating'>) => void
+  updateHall: (id: string, updates: Partial<Omit<Hall, 'id'>>) => void
+  deleteHall: (id: string) => void
   bookings: Booking[]
   addBooking: (data: Omit<Booking, 'id'>) => void
   updateBookingStatus: (id: string, status: BookingStatus) => void
@@ -72,6 +74,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setHalls((prev) => [...prev, { ...data, id: `h${Date.now()}`, rating: 0 }])
   }
 
+  const updateHall = (id: string, updates: Partial<Omit<Hall, 'id'>>) => {
+    setHalls((prev) => prev.map((h) => (h.id === id ? { ...h, ...updates } : h)))
+  }
+
+  const deleteHall = (id: string) => {
+    setHalls((prev) => prev.filter((h) => h.id !== id))
+  }
+
   const addBooking = (data: Omit<Booking, 'id'>) => {
     setBookings((prev) => [...prev, { ...data, id: `b${Date.now()}` }])
   }
@@ -97,6 +107,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         updatePassword,
         halls,
         addHall,
+        updateHall,
+        deleteHall,
         bookings,
         addBooking,
         updateBookingStatus,

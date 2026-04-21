@@ -1,12 +1,25 @@
 'use client'
 
+import { useState } from 'react'
 import { CheckCircle2, XCircle } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/status-badge'
+import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { useApp } from '@/context/app-context'
 import { formatPrice } from '@/lib/mock-data'
+import type { Booking } from '@/types'
+
+type PendingAction = { booking: Booking; action: 'confirmed' | 'refused' } | null
 
 export function OwnerBookingsTab() {
   const { bookings, updateBookingStatus } = useApp()
+  const [pendingAction, setPendingAction] = useState<PendingAction>(null)
+
+  const confirmAction = () => {
+    if (pendingAction) {
+      updateBookingStatus(pendingAction.booking.id, pendingAction.action)
+      setPendingAction(null)
+    }
+  }
 
   return (
     <div>
@@ -43,7 +56,7 @@ export function OwnerBookingsTab() {
                 {booking.status === 'pending' && (
                   <div className="flex gap-2">
                     <button
-                      onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                      onClick={() => setPendingAction({ booking, action: 'confirmed' })}
                       className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-semibold transition-all hover:opacity-90"
                       style={{
                         background: 'rgba(52,211,153,0.15)',
@@ -54,7 +67,7 @@ export function OwnerBookingsTab() {
                       <CheckCircle2 className="w-3.5 h-3.5" /> Accepter
                     </button>
                     <button
-                      onClick={() => updateBookingStatus(booking.id, 'refused')}
+                      onClick={() => setPendingAction({ booking, action: 'refused' })}
                       className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-semibold transition-all hover:opacity-90"
                       style={{
                         background: 'rgba(248,113,113,0.1)',
@@ -71,6 +84,40 @@ export function OwnerBookingsTab() {
           </div>
         ))}
       </div>
+
+      {pendingAction && (
+        <ConfirmDialog
+          title={
+            pendingAction.action === 'confirmed'
+              ? 'Confirmer la réservation ?'
+              : 'Refuser la réservation ?'
+          }
+          message={
+            <>
+              {pendingAction.action === 'confirmed' ? (
+                <>
+                  Vous êtes sur le point de confirmer la réservation de{' '}
+                  <strong className="text-foreground">{pendingAction.booking.client}</strong> pour{' '}
+                  <strong className="text-foreground">{pendingAction.booking.hallName}</strong> le{' '}
+                  <strong className="text-foreground">{pendingAction.booking.date}</strong>.
+                </>
+              ) : (
+                <>
+                  Vous êtes sur le point de refuser la réservation de{' '}
+                  <strong className="text-foreground">{pendingAction.booking.client}</strong> pour{' '}
+                  <strong className="text-foreground">{pendingAction.booking.hallName}</strong> le{' '}
+                  <strong className="text-foreground">{pendingAction.booking.date}</strong>. Le client en sera
+                  notifié.
+                </>
+              )}
+            </>
+          }
+          confirmLabel={pendingAction.action === 'confirmed' ? 'Confirmer' : 'Refuser'}
+          variant={pendingAction.action === 'confirmed' ? 'success' : 'danger'}
+          onClose={() => setPendingAction(null)}
+          onConfirm={confirmAction}
+        />
+      )}
     </div>
   )
 }

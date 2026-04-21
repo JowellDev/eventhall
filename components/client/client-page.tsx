@@ -3,6 +3,10 @@
 import { useState } from 'react'
 import { ClientHeader } from './client-header'
 import { ClientReservations } from './client-reservations'
+import { FavoritesPanel } from './favorites-panel'
+import { CalendarPanel } from './calendar-panel'
+import { NotificationsPanel } from './notifications-panel'
+import { SearchOverlay } from './search-overlay'
 import { HallSearchBar } from '@/components/halls/hall-search-bar'
 import { HallGrid } from '@/components/halls/hall-grid'
 import { HallDetailModal } from '@/components/halls/hall-detail-modal'
@@ -19,6 +23,9 @@ interface ClientPageProps {
 }
 
 type ModalState = 'detail' | 'booking' | null
+type PanelState = 'favorites' | 'calendar' | 'notifications' | 'search' | 'reservations' | null
+
+const NOTIFICATIONS_COUNT = 3
 
 export function ClientPage({
   isAuthenticated = false,
@@ -30,7 +37,7 @@ export function ClientPage({
   const { searchQuery, setSearchQuery, filteredHalls } = useHallSearch(halls)
   const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
   const [modal, setModal] = useState<ModalState>(null)
-  const [showReservations, setShowReservations] = useState(false)
+  const [panel, setPanel] = useState<PanelState>(null)
 
   const openDetail = (hall: Hall) => {
     setSelectedHall(hall)
@@ -50,22 +57,24 @@ export function ClientPage({
     setModal('booking')
   }
 
-  const handleReservations = () => {
-    if (!isAuthenticated) {
-      onLogin?.()
-      return
-    }
-    setShowReservations(true)
+  const requireAuth = (action: PanelState) => {
+    if (!isAuthenticated) { onLogin?.(); return }
+    setPanel(action)
   }
 
   return (
     <div className="min-h-screen bg-background">
       <ClientHeader
         favoritesCount={favorites.length}
+        notificationsCount={isAuthenticated ? NOTIFICATIONS_COUNT : 0}
         isAuthenticated={isAuthenticated}
         onLogin={onLogin}
         onLogout={onLogout}
-        onReservations={handleReservations}
+        onReservations={() => requireAuth('reservations')}
+        onSearch={() => setPanel('search')}
+        onCalendar={() => requireAuth('calendar')}
+        onFavorites={() => requireAuth('favorites')}
+        onNotifications={() => requireAuth('notifications')}
       />
 
       <main>
@@ -99,6 +108,7 @@ export function ClientPage({
         />
       </main>
 
+      {/* Hall modals */}
       {modal === 'detail' && selectedHall && (
         <HallDetailModal
           hall={selectedHall}
@@ -108,13 +118,33 @@ export function ClientPage({
           onBook={handleBook}
         />
       )}
-
       {modal === 'booking' && selectedHall && (
         <BookingModal hall={selectedHall} onClose={closeModal} />
       )}
 
-      {showReservations && (
-        <ClientReservations onClose={() => setShowReservations(false)} />
+      {/* Panels */}
+      {panel === 'reservations' && (
+        <ClientReservations onClose={() => setPanel(null)} />
+      )}
+      {panel === 'favorites' && (
+        <FavoritesPanel
+          favorites={favorites}
+          onClose={() => setPanel(null)}
+          onSelect={(hall) => { setPanel(null); openDetail(hall) }}
+          onToggle={toggleFavorite}
+        />
+      )}
+      {panel === 'calendar' && (
+        <CalendarPanel onClose={() => setPanel(null)} />
+      )}
+      {panel === 'notifications' && (
+        <NotificationsPanel onClose={() => setPanel(null)} />
+      )}
+      {panel === 'search' && (
+        <SearchOverlay
+          onClose={() => setPanel(null)}
+          onSelect={(hall) => { setPanel(null); openDetail(hall) }}
+        />
       )}
     </div>
   )

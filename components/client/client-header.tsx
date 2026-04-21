@@ -3,18 +3,28 @@ import { AppLogo } from '@/components/shared/app-logo'
 
 interface ClientHeaderProps {
   favoritesCount: number
+  notificationsCount: number
   isAuthenticated: boolean
   onLogin?: () => void
   onLogout?: () => void
   onReservations?: () => void
+  onSearch?: () => void
+  onCalendar?: () => void
+  onFavorites?: () => void
+  onNotifications?: () => void
 }
 
 export function ClientHeader({
   favoritesCount,
+  notificationsCount,
   isAuthenticated,
   onLogin,
   onLogout,
   onReservations,
+  onSearch,
+  onCalendar,
+  onFavorites,
+  onNotifications,
 }: ClientHeaderProps) {
   return (
     <header
@@ -44,43 +54,53 @@ export function ClientHeader({
 
         <div className="flex items-center gap-3">
           <button
+            onClick={onSearch}
             className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
             aria-label="Rechercher"
           >
             <Search className="w-5 h-5" />
           </button>
-          <button
-            className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
-            aria-label="Calendrier"
-          >
-            <Calendar className="w-5 h-5" />
-          </button>
-          <button
-            className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground relative"
-            aria-label="Favoris"
-          >
-            <Heart className="w-5 h-5" />
-            {favoritesCount > 0 && (
-              <span
-                className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center text-black"
-                style={{ background: '#d4af37' }}
+          {isAuthenticated && (
+            <>
+              <button
+                onClick={onCalendar}
+                className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
+                aria-label="Calendrier"
               >
-                {favoritesCount}
-              </span>
-            )}
-          </button>
-          <button
-            className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground relative"
-            aria-label="Notifications"
-          >
-            <Bell className="w-5 h-5" />
-            <span
-              className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center text-black"
-              style={{ background: '#d4af37' }}
-            >
-              3
-            </span>
-          </button>
+                <Calendar className="w-5 h-5" />
+              </button>
+              <button
+                onClick={onFavorites}
+                className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground relative"
+                aria-label="Favoris"
+              >
+                <Heart className="w-5 h-5" />
+                {favoritesCount > 0 && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center text-black"
+                    style={{ background: '#d4af37' }}
+                  >
+                    {favoritesCount}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={onNotifications}
+                className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground relative"
+                aria-label="Notifications"
+              >
+                <Bell className="w-5 h-5" />
+                {notificationsCount > 0 && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center text-black"
+                    style={{ background: '#d4af37' }}
+                  >
+                    {notificationsCount}
+                  </span>
+                )}
+              </button>
+            </>
+          )}
 
           {isAuthenticated ? (
             <button

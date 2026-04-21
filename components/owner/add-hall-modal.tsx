@@ -3,37 +3,42 @@
 import { useState, useRef, type ChangeEvent } from 'react'
 import { X, Plus, Upload, ImageIcon, AlertCircle } from 'lucide-react'
 import { useApp } from '@/context/app-context'
+import type { Hall } from '@/types'
 
-interface AddHallModalProps {
+interface HallFormModalProps {
+  hall?: Hall
   onClose: () => void
 }
 
-export function AddHallModal({ onClose }: AddHallModalProps) {
-  const { addHall } = useApp()
+export function AddHallModal({ hall: initialHall, onClose }: HallFormModalProps) {
+  const { addHall, updateHall } = useApp()
+  const isEdit = !!initialHall
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const [name, setName] = useState('')
-  const [location, setLocation] = useState('')
-  const [capacity, setCapacity] = useState('')
-  const [pricePerHour, setPricePerHour] = useState('')
-  const [hours, setHours] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  const [imagePreview, setImagePreview] = useState('')
-
+  const [name, setName] = useState(initialHall?.name ?? '')
+  const [location, setLocation] = useState(initialHall?.location ?? '')
+  const [capacity, setCapacity] = useState(initialHall?.capacity ? String(initialHall.capacity) : '')
+  const [pricePerHour, setPricePerHour] = useState(
+    initialHall?.pricePerHour ? String(initialHall.pricePerHour) : '',
+  )
+  const [hours, setHours] = useState(initialHall?.hours ?? '')
+  const [imageUrl, setImageUrl] = useState(initialHall?.image ?? '')
+  const [imagePreview, setImagePreview] = useState(
+    initialHall?.image && !initialHall.image.includes('placeholder') ? initialHall.image : '',
+  )
   const [featureInput, setFeatureInput] = useState('')
-  const [features, setFeatures] = useState<string[]>([])
-
+  const [features, setFeatures] = useState<string[]>(initialHall?.features ?? [])
   const [serviceInput, setServiceInput] = useState('')
-  const [services, setServices] = useState<string[]>([])
+  const [services, setServices] = useState<string[]>(initialHall?.services ?? [])
 
   const inputClass =
     'w-full px-4 py-3 rounded-xl border bg-transparent text-foreground placeholder:text-muted-foreground outline-none transition-colors font-body text-sm'
   const inputStyle = { borderColor: 'rgba(212,175,55,0.2)' }
-  const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const focus = (e: React.FocusEvent<HTMLInputElement>) =>
     (e.target.style.borderColor = 'rgba(212,175,55,0.6)')
-  const blur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const blur = (e: React.FocusEvent<HTMLInputElement>) =>
     (e.target.style.borderColor = 'rgba(212,175,55,0.2)')
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +64,8 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
     setInput('')
   }
 
-  const removeTag = (val: string, list: string[], setList: (v: string[]) => void) => {
+  const removeTag = (val: string, list: string[], setList: (v: string[]) => void) =>
     setList(list.filter((t) => t !== val))
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,7 +76,7 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
     }
     setLoading(true)
     await new Promise((r) => setTimeout(r, 500))
-    addHall({
+    const data = {
       name,
       location,
       capacity: parseInt(capacity),
@@ -81,7 +85,12 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
       image: imageUrl || '/placeholder.svg?height=400&width=600',
       features,
       services,
-    })
+    }
+    if (isEdit && initialHall) {
+      updateHall(initialHall.id, data)
+    } else {
+      addHall(data)
+    }
     setLoading(false)
     onClose()
   }
@@ -137,7 +146,11 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
             <span
               key={tag}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-body font-medium"
-              style={{ background: 'rgba(212,175,55,0.12)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.25)' }}
+              style={{
+                background: 'rgba(212,175,55,0.12)',
+                color: '#d4af37',
+                border: '1px solid rgba(212,175,55,0.25)',
+              }}
             >
               {tag}
               <button
@@ -170,11 +183,10 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
           className="flex items-center justify-between px-6 py-5 border-b"
           style={{ borderColor: 'rgba(212,175,55,0.1)' }}
         >
-          <h2 className="font-display text-lg font-bold text-foreground">Ajouter une salle</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg hover:bg-surface-overlay transition-colors"
-          >
+          <h2 className="font-display text-lg font-bold text-foreground">
+            {isEdit ? 'Modifier la salle' : 'Ajouter une salle'}
+          </h2>
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface-overlay transition-colors">
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
@@ -188,7 +200,7 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
                 Image de la salle
               </label>
               <div
-                className="relative h-36 rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors hover:border-gold"
+                className="relative h-36 rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors"
                 style={{
                   borderColor: imagePreview ? 'rgba(212,175,55,0.4)' : 'rgba(212,175,55,0.2)',
                   background: imagePreview ? 'transparent' : 'rgba(212,175,55,0.03)',
@@ -206,9 +218,11 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
                   <>
                     <ImageIcon className="w-8 h-8 mb-2" style={{ color: 'rgba(212,175,55,0.4)' }} />
                     <p className="text-sm text-muted-foreground font-body">
-                      Cliquez pour ajouter une photo
+                      Cliquez pour {isEdit ? 'changer la photo' : 'ajouter une photo'}
                     </p>
-                    <p className="text-xs text-muted-foreground font-body mt-1">PNG, JPG jusqu'à 5 Mo</p>
+                    <p className="text-xs text-muted-foreground font-body mt-1">
+                      PNG, JPG jusqu'à 5 Mo
+                    </p>
                   </>
                 )}
                 {imagePreview && (
@@ -341,7 +355,11 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
             {error && (
               <div
                 className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-body"
-                style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)' }}
+                style={{
+                  background: 'rgba(239,68,68,0.1)',
+                  color: '#f87171',
+                  border: '1px solid rgba(239,68,68,0.2)',
+                }}
               >
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 {error}
@@ -367,7 +385,11 @@ export function AddHallModal({ onClose }: AddHallModalProps) {
                   opacity: loading ? 0.7 : 1,
                 }}
               >
-                {loading ? 'Enregistrement...' : 'Ajouter la salle'}
+                {loading
+                  ? 'Enregistrement...'
+                  : isEdit
+                    ? 'Enregistrer les modifications'
+                    : 'Ajouter la salle'}
               </button>
             </div>
           </form>

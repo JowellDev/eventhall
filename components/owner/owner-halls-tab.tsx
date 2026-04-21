@@ -3,12 +3,18 @@
 import { useState } from 'react'
 import { Star, Eye, Pencil, Trash2 } from 'lucide-react'
 import { AddHallModal } from './add-hall-modal'
+import { OwnerHallDetailModal } from './owner-hall-detail-modal'
+import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { useApp } from '@/context/app-context'
 import { formatPrice } from '@/lib/mock-data'
+import type { Hall } from '@/types'
 
 export function OwnerHallsTab() {
-  const { halls } = useApp()
+  const { halls, deleteHall } = useApp()
   const [showAddModal, setShowAddModal] = useState(false)
+  const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
+  const [editHall, setEditHall] = useState<Hall | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Hall | null>(null)
 
   return (
     <div>
@@ -64,18 +70,21 @@ export function OwnerHallsTab() {
                 </p>
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => setSelectedHall(hall)}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-medium border transition-all hover:border-gold"
                     style={{ borderColor: 'rgba(212,175,55,0.2)', color: 'var(--muted-foreground)' }}
                   >
                     <Eye className="w-3.5 h-3.5" /> Voir
                   </button>
                   <button
+                    onClick={() => setEditHall(hall)}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-medium border transition-all hover:border-gold"
                     style={{ borderColor: 'rgba(212,175,55,0.2)', color: 'var(--muted-foreground)' }}
                   >
                     <Pencil className="w-3.5 h-3.5" /> Modifier
                   </button>
                   <button
+                    onClick={() => setDeleteTarget(hall)}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-body font-medium border transition-all hover:border-red-500/50 hover:text-red-400 ml-auto"
                     style={{ borderColor: 'rgba(212,175,55,0.12)', color: 'var(--muted-foreground)' }}
                     aria-label={`Supprimer ${hall.name}`}
@@ -90,6 +99,29 @@ export function OwnerHallsTab() {
       )}
 
       {showAddModal && <AddHallModal onClose={() => setShowAddModal(false)} />}
+      {selectedHall && (
+        <OwnerHallDetailModal hall={selectedHall} onClose={() => setSelectedHall(null)} />
+      )}
+      {editHall && <AddHallModal hall={editHall} onClose={() => setEditHall(null)} />}
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Supprimer la salle ?"
+          message={
+            <>
+              Vous êtes sur le point de supprimer{' '}
+              <strong className="text-foreground">{deleteTarget.name}</strong>. Cette action est
+              irréversible et supprimera toutes les données associées.
+            </>
+          }
+          confirmLabel="Supprimer"
+          variant="danger"
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={() => {
+            deleteHall(deleteTarget.id)
+            setDeleteTarget(null)
+          }}
+        />
+      )}
     </div>
   )
 }
