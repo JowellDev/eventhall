@@ -1,5 +1,18 @@
 export type Role = 'client' | 'owner' | 'admin'
 
+export type OwnerStatus = 'active' | 'pending' | 'suspended'
+
+export interface Owner {
+  id: string
+  name: string
+  email: string
+  phone: string
+  halls: number
+  revenue: string
+  status: OwnerStatus
+  joinedAt: string
+}
+
 export type BookingStatus = 'pending' | 'confirmed' | 'refused' | 'cancelled'
 
 export interface User {

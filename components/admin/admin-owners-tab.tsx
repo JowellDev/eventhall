@@ -1,23 +1,42 @@
 'use client'
 
+import { useState } from 'react'
 import { Eye, Pencil } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/status-badge'
 import { Pagination } from '@/components/shared/pagination'
 import { usePagination } from '@/hooks/use-pagination'
+import { OwnerModal } from '@/components/admin/owner-modal'
+import { useApp } from '@/context/app-context'
+import type { Owner } from '@/types'
 
-const ALL_OWNERS = [
-  { id: 'o1', name: 'Kouamé Jean-Paul', email: 'jp.kouame@mail.ci', halls: 3, revenue: '8.5M FCFA', status: 'active' as const },
-  { id: 'o2', name: 'Traoré Fatou', email: 'f.traore@mail.ci', halls: 2, revenue: '5.2M FCFA', status: 'active' as const },
-  { id: 'o3', name: 'Koffi Akissi', email: 'a.koffi@mail.ci', halls: 1, revenue: '2.1M FCFA', status: 'pending' as const },
-  { id: 'o4', name: 'Bah Mohamed', email: 'm.bah@mail.ci', halls: 4, revenue: '12.4M FCFA', status: 'active' as const },
-  { id: 'o5', name: 'Assi Christiane', email: 'c.assi@mail.ci', halls: 2, revenue: '6.8M FCFA', status: 'active' as const },
-]
+type ModalState =
+  | { open: false }
+  | { open: true; mode: 'view' | 'create' | 'edit'; owner: Owner | null }
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25]
 
 export function AdminOwnersTab() {
+  const { owners, addOwner, updateOwner } = useApp()
+  const [modal, setModal] = useState<ModalState>({ open: false })
+
   const { page, setPage, pageSize, setPageSize, paginatedItems, totalPages, total, from, to } =
-    usePagination(ALL_OWNERS, 5)
+    usePagination(owners, 5)
+
+  const openCreate = () => setModal({ open: true, mode: 'create', owner: null })
+  const openView = (owner: Owner) => setModal({ open: true, mode: 'view', owner })
+  const openEdit = (owner: Owner) => setModal({ open: true, mode: 'edit', owner })
+  const closeModal = () => setModal({ open: false })
+
+  const handleSave = (data: Omit<Owner, 'id'> & { id?: string }) => {
+    if (data.id) {
+      const { id, ...updates } = data
+      updateOwner(id, updates)
+    } else {
+      const { id: _id, ...rest } = data
+      addOwner(rest)
+    }
+    closeModal()
+  }
 
   return (
     <div>
@@ -26,12 +45,14 @@ export function AdminOwnersTab() {
           Tous les propriétaires
         </h2>
         <button
+          onClick={openCreate}
           className="px-4 py-2 rounded-xl text-sm font-semibold font-body transition-all hover:opacity-90"
           style={{ background: 'linear-gradient(135deg, #d4af37, #f4c430)', color: '#0a0a0a' }}
         >
           + Ajouter
         </button>
       </div>
+
       <div className="space-y-3">
         {paginatedItems.map((owner) => (
           <div
@@ -63,6 +84,7 @@ export function AdminOwnersTab() {
               <StatusBadge status={owner.status} />
               <div className="flex gap-2 ml-2">
                 <button
+                  onClick={() => openView(owner)}
                   className="p-2 rounded-lg border transition-all hover:border-gold"
                   style={{ borderColor: 'rgba(212,175,55,0.2)', color: 'var(--muted-foreground)' }}
                   aria-label="Voir"
@@ -70,6 +92,7 @@ export function AdminOwnersTab() {
                   <Eye className="w-4 h-4" />
                 </button>
                 <button
+                  onClick={() => openEdit(owner)}
                   className="p-2 rounded-lg border transition-all hover:border-gold"
                   style={{ borderColor: 'rgba(212,175,55,0.2)', color: 'var(--muted-foreground)' }}
                   aria-label="Modifier"
@@ -81,6 +104,7 @@ export function AdminOwnersTab() {
           </div>
         ))}
       </div>
+
       <Pagination
         page={page}
         totalPages={totalPages}
@@ -92,6 +116,15 @@ export function AdminOwnersTab() {
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
       />
+
+      {modal.open && (
+        <OwnerModal
+          mode={modal.mode}
+          owner={modal.owner}
+          onClose={closeModal}
+          onSave={handleSave}
+        />
+      )}
     </div>
   )
 }

@@ -1,6 +1,6 @@
-import type { Hall, Booking, Package } from '@/types'
+import type { Hall, Booking, Package, Owner } from '@/types'
 
-export type { Hall, Booking, Package }
+export type { Hall, Booking, Package, Owner }
 
 export const halls: Hall[] = [
   {
@@ -121,3 +121,56 @@ export const packages: Package[] = [
 
 export const formatPrice = (price: number) =>
   price.toLocaleString('fr-FR') + ' FCFA'
+
+export const owners: Owner[] = [
+  {
+    id: 'o1',
+    name: 'Kouamé Jean-Paul',
+    email: 'jp.kouame@mail.ci',
+    phone: '+225 07 01 23 45 67',
+    halls: 3,
+    revenue: '8.5M FCFA',
+    status: 'active',
+    joinedAt: '2023-03-12',
+  },
+  {
+    id: 'o2',
+    name: 'Traoré Fatou',
+    email: 'f.traore@mail.ci',
+    phone: '+225 05 98 76 54 32',
+    halls: 2,
+    revenue: '5.2M FCFA',
+    status: 'active',
+    joinedAt: '2023-07-08',
+  },
+  {
+    id: 'o3',
+    name: 'Koffi Akissi',
+    email: 'a.koffi@mail.ci',
+    phone: '+225 01 45 67 89 01',
+    halls: 1,
+    revenue: '2.1M FCFA',
+    status: 'pending',
+    joinedAt: '2024-01-20',
+  },
+  {
+    id: 'o4',
+    name: 'Bah Mohamed',
+    email: 'm.bah@mail.ci',
+    phone: '+225 07 23 45 67 89',
+    halls: 4,
+    revenue: '12.4M FCFA',
+    status: 'active',
+    joinedAt: '2022-11-05',
+  },
+  {
+    id: 'o5',
+    name: 'Assi Christiane',
+    email: 'c.assi@mail.ci',
+    phone: '+225 05 34 56 78 90',
+    halls: 2,
+    revenue: '6.8M FCFA',
+    status: 'active',
+    joinedAt: '2023-09-14',
+  },
+]

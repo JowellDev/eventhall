@@ -1,8 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, type ReactNode } from 'react'
-import { halls as initialHalls, bookings as initialBookings } from '@/lib/mock-data'
-import type { Role, User, Hall, Booking, BookingStatus } from '@/types'
+import { halls as initialHalls, bookings as initialBookings, owners as initialOwners } from '@/lib/mock-data'
+import type { Role, User, Hall, Booking, BookingStatus, Owner } from '@/types'
 
 const INITIAL_USERS: User[] = [
   { id: 'u1', name: 'Kouassi Ama', email: 'client@eventhalls.com', password: 'Client@123', role: 'client' },
@@ -27,6 +27,9 @@ interface AppContextType {
   addBooking: (data: Omit<Booking, 'id'>) => void
   updateBookingStatus: (id: string, status: BookingStatus) => void
   updateBooking: (id: string, updates: Partial<Booking>) => void
+  owners: Owner[]
+  addOwner: (data: Omit<Owner, 'id'>) => void
+  updateOwner: (id: string, updates: Partial<Omit<Owner, 'id'>>) => void
 }
 
 const AppContext = createContext<AppContextType | null>(null)
@@ -36,6 +39,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [halls, setHalls] = useState<Hall[]>(initialHalls)
   const [bookings, setBookings] = useState<Booking[]>(initialBookings)
+  const [owners, setOwners] = useState<Owner[]>(initialOwners)
 
   const login = (email: string, password: string): User | null => {
     const user = users.find(
@@ -94,6 +98,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, ...updates } : b)))
   }
 
+  const addOwner = (data: Omit<Owner, 'id'>) => {
+    setOwners((prev) => [...prev, { ...data, id: `o${Date.now()}` }])
+  }
+
+  const updateOwner = (id: string, updates: Partial<Omit<Owner, 'id'>>) => {
+    setOwners((prev) => prev.map((o) => (o.id === id ? { ...o, ...updates } : o)))
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -113,6 +125,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addBooking,
         updateBookingStatus,
         updateBooking,
+        owners,
+        addOwner,
+        updateOwner,
       }}
     >
       {children}
