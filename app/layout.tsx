@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
+import { Providers } from './providers'
 import './globals.css'
 
 const montserrat = Montserrat({
@@ -21,8 +22,8 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="fr" className={`${montserrat.variable} bg-background`}>
-			<body className="font-sans antialiased bg-background text-foreground">
-				{children}
+			<body className="bg-background text-foreground font-sans antialiased">
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	)

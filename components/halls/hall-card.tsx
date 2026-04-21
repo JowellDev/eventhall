@@ -47,7 +47,7 @@ export function HallCard({
 				<button
 					className="absolute top-3 left-3 p-2 rounded-full transition-all hover:scale-110"
 					style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
-					onClick={(e) => {
+					onClick={e => {
 						e.stopPropagation()
 						onToggleFavorite(hall.id)
 					}}
@@ -78,7 +78,7 @@ export function HallCard({
 				</div>
 
 				<div className="flex flex-wrap gap-2 mb-4">
-					{hall.features.map((f) => (
+					{hall.features.map(f => (
 						<span
 							key={f}
 							className="px-2.5 py-1 rounded-lg text-xs font-body font-medium"
@@ -108,7 +108,7 @@ export function HallCard({
 							background: 'linear-gradient(135deg, #d4af37, #f4c430)',
 							color: '#0a0a0a',
 						}}
-						onClick={(e) => {
+						onClick={e => {
 							e.stopPropagation()
 							onSelect(hall)
 						}}
