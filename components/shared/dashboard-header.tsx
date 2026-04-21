@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogOut } from 'lucide-react'
+import { LogOut, Home } from 'lucide-react'
 import { AppLogo } from './app-logo'
 
 interface Tab {
@@ -70,14 +70,24 @@ export function DashboardHeader({
 					))}
 				</nav>
 
-				<button
-					onClick={onLogout}
-					className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
-					style={{ borderColor: 'rgba(212,175,55,0.2)' }}
-				>
-					<LogOut className="w-4 h-4" />
-					<span className="hidden md:inline">Déconnexion</span>
-				</button>
+				<div className="flex items-center gap-2">
+					<Link
+						href="/"
+						className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
+						style={{ borderColor: 'rgba(212,175,55,0.2)' }}
+					>
+						<Home className="w-4 h-4" />
+						<span className="hidden md:inline">Accueil</span>
+					</Link>
+					<button
+						onClick={onLogout}
+						className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
+						style={{ borderColor: 'rgba(212,175,55,0.2)' }}
+					>
+						<LogOut className="w-4 h-4" />
+						<span className="hidden md:inline">Déconnexion</span>
+					</button>
+				</div>
 			</div>
 
 			{/* Mobile tab nav */}

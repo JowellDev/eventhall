@@ -18,6 +18,7 @@ import type { Hall } from '@/types'
 
 interface ClientPageProps {
 	isAuthenticated?: boolean
+	dashboardHref?: string
 	onLogin?: () => void
 	onLogout?: () => void
 }
@@ -35,6 +36,7 @@ const NOTIFICATIONS_COUNT = 3
 
 export function ClientPage({
 	isAuthenticated = false,
+	dashboardHref,
 	onLogin,
 	onLogout,
 }: ClientPageProps) {
@@ -86,6 +88,7 @@ export function ClientPage({
 				favoritesCount={favorites.length}
 				notificationsCount={isAuthenticated ? NOTIFICATIONS_COUNT : 0}
 				isAuthenticated={isAuthenticated}
+				dashboardHref={dashboardHref}
 				onLogin={onLogin}
 				onLogout={onLogout}
 				onReservations={() => requireAuth('reservations')}

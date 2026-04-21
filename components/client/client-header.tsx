@@ -1,10 +1,12 @@
-import { Calendar, Heart, Bell, LogOut, BookOpen } from 'lucide-react'
+import Link from 'next/link'
+import { Calendar, Heart, Bell, LogOut, BookOpen, LayoutDashboard } from 'lucide-react'
 import { AppLogo } from '@/components/shared/app-logo'
 
 interface ClientHeaderProps {
 	favoritesCount: number
 	notificationsCount: number
 	isAuthenticated: boolean
+	dashboardHref?: string
 	onLogin?: () => void
 	onLogout?: () => void
 	onReservations?: () => void
@@ -17,6 +19,7 @@ export function ClientHeader({
 	favoritesCount,
 	notificationsCount,
 	isAuthenticated,
+	dashboardHref,
 	onLogin,
 	onLogout,
 	onReservations,
@@ -95,6 +98,20 @@ export function ClientHeader({
 								)}
 							</button>
 						</>
+					)}
+
+					{dashboardHref && (
+						<Link
+							href={dashboardHref}
+							className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-body font-semibold transition-opacity hover:opacity-90"
+							style={{
+								background: 'linear-gradient(135deg, #d4af37, #f4c430)',
+								color: '#000',
+							}}
+						>
+							<LayoutDashboard className="w-4 h-4" />
+							<span className="hidden sm:inline">Mon espace</span>
+						</Link>
 					)}
 
 					{isAuthenticated ? (
