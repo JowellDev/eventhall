@@ -34,7 +34,16 @@ export function ClientPage({
 }: ClientPageProps) {
   const { halls } = useApp()
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites()
-  const { searchQuery, setSearchQuery, filteredHalls } = useHallSearch(halls)
+  const {
+    searchQuery,
+    setSearchQuery,
+    filters,
+    updateFilter,
+    resetFilters,
+    activeFilterCount,
+    allFeatures,
+    filteredHalls,
+  } = useHallSearch(halls)
   const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
   const [modal, setModal] = useState<ModalState>(null)
   const [panel, setPanel] = useState<PanelState>(null)
@@ -71,7 +80,6 @@ export function ClientPage({
         onLogin={onLogin}
         onLogout={onLogout}
         onReservations={() => requireAuth('reservations')}
-        onSearch={() => setPanel('search')}
         onCalendar={() => requireAuth('calendar')}
         onFavorites={() => requireAuth('favorites')}
         onNotifications={() => requireAuth('notifications')}
@@ -96,7 +104,15 @@ export function ClientPage({
             Des espaces prestige pour vos événements les plus mémorables à Abidjan
           </p>
           <div className="max-w-2xl mx-auto relative z-10">
-            <HallSearchBar value={searchQuery} onChange={setSearchQuery} />
+            <HallSearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              filters={filters}
+              onUpdateFilter={updateFilter}
+              onResetFilters={resetFilters}
+              activeFilterCount={activeFilterCount}
+              allFeatures={allFeatures}
+            />
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-import { Search, Calendar, Heart, Bell, LogOut } from 'lucide-react'
+import { Calendar, Heart, Bell, LogOut } from 'lucide-react'
 import { AppLogo } from '@/components/shared/app-logo'
 
 interface ClientHeaderProps {
@@ -8,7 +8,6 @@ interface ClientHeaderProps {
   onLogin?: () => void
   onLogout?: () => void
   onReservations?: () => void
-  onSearch?: () => void
   onCalendar?: () => void
   onFavorites?: () => void
   onNotifications?: () => void
@@ -21,7 +20,6 @@ export function ClientHeader({
   onLogin,
   onLogout,
   onReservations,
-  onSearch,
   onCalendar,
   onFavorites,
   onNotifications,
@@ -39,9 +37,6 @@ export function ClientHeader({
         <AppLogo />
 
         <nav className="hidden md:flex items-center gap-6">
-          <button className="text-muted-foreground hover:text-foreground transition-colors font-body text-sm">
-            Explorer
-          </button>
           {isAuthenticated && (
             <button
               onClick={onReservations}
@@ -53,13 +48,6 @@ export function ClientHeader({
         </nav>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={onSearch}
-            className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
-            aria-label="Rechercher"
-          >
-            <Search className="w-5 h-5" />
-          </button>
           {isAuthenticated && (
             <>
               <button
