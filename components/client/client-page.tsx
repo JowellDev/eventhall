@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useLocale } from '@/context/locale-context'
 import { ClientHeader } from './client-header'
 import { ClientReservations } from './client-reservations'
 import { FavoritesPanel } from './favorites-panel'
@@ -41,6 +42,7 @@ export function ClientPage({
 	onLogout,
 }: ClientPageProps) {
 	const { halls } = useApp()
+	const { t } = useLocale()
 	const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites()
 	const {
 		searchQuery,
@@ -109,12 +111,11 @@ export function ClientPage({
 						aria-hidden="true"
 					/>
 					<h1 className="font-display text-4xl md:text-6xl font-bold text-foreground mb-4 text-balance relative z-10">
-						Trouvez votre salle{' '}
-						<span className="gold-gradient-text">d&apos;exception</span>
+						{t.heroTitle}{' '}
+						<span className="gold-gradient-text">{t.heroHighlight}</span>
 					</h1>
 					<p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto font-body relative z-10">
-						Des espaces prestige pour vos événements les plus mémorables à
-						Abidjan
+						{t.heroSubtitle}
 					</p>
 					<div className="max-w-2xl mx-auto relative z-10">
 						<HallSearchBar

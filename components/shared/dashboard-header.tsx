@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogOut, Home } from 'lucide-react'
 import { AppLogo } from './app-logo'
+import { ThemeLocaleControls } from './theme-locale-controls'
+import { useLocale } from '@/context/locale-context'
 
 interface Tab {
 	key: string
@@ -26,6 +28,7 @@ export function DashboardHeader({
 	onLogout,
 }: DashboardHeaderProps) {
 	const pathname = usePathname()
+	const { t } = useLocale()
 
 	const isActive = (key: string) => pathname === `${basePath}/${key}`
 
@@ -41,7 +44,7 @@ export function DashboardHeader({
 		<header
 			className="sticky top-0 z-40 border-b"
 			style={{
-				background: 'rgba(10,10,10,0.95)',
+				background: 'var(--header-bg)',
 				backdropFilter: 'blur(20px)',
 				borderColor: 'rgba(212,175,55,0.15)',
 			}}
@@ -71,13 +74,14 @@ export function DashboardHeader({
 				</nav>
 
 				<div className="flex items-center gap-2">
+					<ThemeLocaleControls />
 					<Link
 						href="/"
 						className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
 						style={{ borderColor: 'rgba(212,175,55,0.2)' }}
 					>
 						<Home className="w-4 h-4" />
-						<span className="hidden md:inline">Accueil</span>
+						<span className="hidden md:inline">{t.home}</span>
 					</Link>
 					<button
 						onClick={onLogout}
@@ -85,7 +89,7 @@ export function DashboardHeader({
 						style={{ borderColor: 'rgba(212,175,55,0.2)' }}
 					>
 						<LogOut className="w-4 h-4" />
-						<span className="hidden md:inline">Déconnexion</span>
+						<span className="hidden md:inline">{t.logout}</span>
 					</button>
 				</div>
 			</div>

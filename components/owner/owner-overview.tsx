@@ -1,6 +1,9 @@
+'use client'
+
 import { BarChart3, Activity, Star } from 'lucide-react'
 import { BarChart } from '@/components/shared/bar-chart'
 import { halls } from '@/lib/mock-data'
+import { useLocale } from '@/context/locale-context'
 
 const revenueData = [
 	{ label: 'Lun', value: 65 },
@@ -22,17 +25,19 @@ const recentActivity = [
 const RANK_COLORS = ['#f4c430', '#c0c0c0', '#cd7f32']
 
 export function OwnerOverview() {
+	const { t } = useLocale()
+
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			{/* Revenue Chart */}
 			<div
 				className="lg:col-span-2 rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-6">
 					<BarChart3 className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h2 className="font-display text-base font-semibold text-foreground">
-						Revenus — 7 derniers jours
+						{t.revenueTitle}
 					</h2>
 				</div>
 				<BarChart data={revenueData} height={140} />
@@ -41,19 +46,19 @@ export function OwnerOverview() {
 			{/* Activity Feed */}
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-5">
 					<Activity className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h2 className="font-display text-base font-semibold text-foreground">
-						Activité récente
+						{t.recentActivity}
 					</h2>
 				</div>
 				<ul className="space-y-4">
 					{recentActivity.map((item, i) => (
 						<li key={i} className="flex gap-3">
 							<div
-								className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+								className="w-2 h-2 rounded-full mt-1.5 shrink-0"
 								style={{ background: '#d4af37' }}
 								aria-hidden="true"
 							/>
@@ -73,17 +78,17 @@ export function OwnerOverview() {
 			{/* Top Halls */}
 			<div
 				className="lg:col-span-3 rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<h2 className="font-display text-base font-semibold text-foreground mb-4">
-					Top Salles
+					{t.topHalls}
 				</h2>
 				<div className="space-y-3">
 					{halls.map((hall, i) => (
 						<div
 							key={hall.id}
 							className="flex items-center gap-4 p-3 rounded-xl"
-							style={{ background: '#111' }}
+							style={{ background: 'var(--surface)' }}
 						>
 							<span
 								className="font-display text-2xl font-bold w-8 text-center"
@@ -106,9 +111,7 @@ export function OwnerOverview() {
 							</div>
 							<div
 								className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-black"
-								style={{
-									background: 'linear-gradient(135deg, #d4af37, #f4c430)',
-								}}
+								style={{ background: 'linear-gradient(135deg, #d4af37, #f4c430)' }}
 							>
 								<Star className="w-3 h-3 fill-current" />
 								{hall.rating}

@@ -1,5 +1,8 @@
+'use client'
+
 import { BarChart3 } from 'lucide-react'
 import { BarChart } from '@/components/shared/bar-chart'
+import { useLocale } from '@/context/locale-context'
 
 const platformStats = [
 	{ label: 'Jan', value: 62 },
@@ -27,36 +30,34 @@ const eventTypes = [
 ]
 
 export function AdminAnalyticsTab() {
+	const { t } = useLocale()
+
 	return (
 		<div className="space-y-6">
 			<h2 className="font-display text-xl font-semibold text-foreground">
-				Analytiques globales
+				{t.globalAnalytics}
 			</h2>
 
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-6">
 					<BarChart3 className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h3 className="font-display text-base font-semibold text-foreground">
-						Réservations mensuelles — 2025
+						{t.monthlyBookings}
 					</h3>
 				</div>
 				<BarChart data={platformStats} height={180} showTopLabel />
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-				{/* Zone distribution */}
 				<div
 					className="rounded-2xl p-5 border"
-					style={{
-						background: '#1a1a1a',
-						borderColor: 'rgba(212,175,55,0.12)',
-					}}
+					style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 				>
 					<h3 className="font-display text-base font-semibold text-foreground mb-4">
-						Répartition par zone
+						{t.zoneDistribution}
 					</h3>
 					<div className="space-y-3">
 						{zones.map(({ zone, pct }) => (
@@ -65,16 +66,10 @@ export function AdminAnalyticsTab() {
 									<span className="text-muted-foreground">{zone}</span>
 									<span className="text-foreground font-semibold">{pct}%</span>
 								</div>
-								<div
-									className="h-1.5 rounded-full"
-									style={{ background: '#111' }}
-								>
+								<div className="h-1.5 rounded-full" style={{ background: 'var(--surface)' }}>
 									<div
 										className="h-full rounded-full"
-										style={{
-											width: `${pct}%`,
-											background: 'linear-gradient(90deg, #b8922a, #f4c430)',
-										}}
+										style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #b8922a, #f4c430)' }}
 									/>
 								</div>
 							</div>
@@ -82,31 +77,19 @@ export function AdminAnalyticsTab() {
 					</div>
 				</div>
 
-				{/* Event types */}
 				<div
 					className="rounded-2xl p-5 border"
-					style={{
-						background: '#1a1a1a',
-						borderColor: 'rgba(212,175,55,0.12)',
-					}}
+					style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 				>
 					<h3 className="font-display text-base font-semibold text-foreground mb-4">
-						Types d&apos;événements
+						{t.eventTypes}
 					</h3>
 					<div className="space-y-3">
 						{eventTypes.map(({ type, count, color }) => (
 							<div key={type} className="flex items-center gap-3">
-								<div
-									className="w-3 h-3 rounded-full flex-shrink-0"
-									style={{ background: color }}
-									aria-hidden="true"
-								/>
-								<span className="text-sm font-body text-muted-foreground flex-1">
-									{type}
-								</span>
-								<span className="text-sm font-semibold font-body text-foreground">
-									{count}
-								</span>
+								<div className="w-3 h-3 rounded-full shrink-0" style={{ background: color }} aria-hidden="true" />
+								<span className="text-sm font-body text-muted-foreground flex-1">{type}</span>
+								<span className="text-sm font-semibold font-body text-foreground">{count}</span>
 							</div>
 						))}
 					</div>

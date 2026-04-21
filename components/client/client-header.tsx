@@ -1,6 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { Calendar, Heart, Bell, LogOut, BookOpen, LayoutDashboard } from 'lucide-react'
 import { AppLogo } from '@/components/shared/app-logo'
+import { ThemeLocaleControls } from '@/components/shared/theme-locale-controls'
+import { useLocale } from '@/context/locale-context'
 
 interface ClientHeaderProps {
 	favoritesCount: number
@@ -27,11 +31,13 @@ export function ClientHeader({
 	onFavorites,
 	onNotifications,
 }: ClientHeaderProps) {
+	const { t } = useLocale()
+
 	return (
 		<header
 			className="sticky top-0 z-40 border-b"
 			style={{
-				background: 'rgba(10,10,10,0.95)',
+				background: 'var(--header-bg)',
 				backdropFilter: 'blur(20px)',
 				borderColor: 'rgba(212,175,55,0.15)',
 			}}
@@ -45,32 +51,34 @@ export function ClientHeader({
 							onClick={onReservations}
 							className="text-muted-foreground hover:text-foreground transition-colors font-body text-sm"
 						>
-							Mes réservations
+							{t.myReservations}
 						</button>
 					)}
 				</nav>
 
 				<div className="flex items-center gap-2 sm:gap-3">
+					<ThemeLocaleControls />
+
 					{isAuthenticated && (
 						<>
 							<button
 								onClick={onReservations}
 								className="md:hidden p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
-								aria-label="Mes réservations"
+								aria-label={t.myReservations}
 							>
 								<BookOpen className="w-5 h-5" />
 							</button>
 							<button
 								onClick={onCalendar}
 								className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground"
-								aria-label="Calendrier"
+								aria-label={t.calendar}
 							>
 								<Calendar className="w-5 h-5" />
 							</button>
 							<button
 								onClick={onFavorites}
 								className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground relative"
-								aria-label="Favoris"
+								aria-label={t.favorites}
 							>
 								<Heart className="w-5 h-5" />
 								{favoritesCount > 0 && (
@@ -85,7 +93,7 @@ export function ClientHeader({
 							<button
 								onClick={onNotifications}
 								className="p-2 rounded-lg hover:bg-surface-raised transition-colors text-muted-foreground hover:text-foreground relative"
-								aria-label="Notifications"
+								aria-label={t.notifications}
 							>
 								<Bell className="w-5 h-5" />
 								{notificationsCount > 0 && (
@@ -110,7 +118,7 @@ export function ClientHeader({
 							}}
 						>
 							<LayoutDashboard className="w-4 h-4" />
-							<span className="hidden sm:inline">Mon espace</span>
+							<span className="hidden sm:inline">{t.mySpace}</span>
 						</Link>
 					)}
 
@@ -119,10 +127,10 @@ export function ClientHeader({
 							onClick={onLogout}
 							className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
 							style={{ borderColor: 'rgba(212,175,55,0.2)' }}
-							aria-label="Déconnexion"
+							aria-label={t.logout}
 						>
 							<LogOut className="w-4 h-4" />
-							<span className="hidden sm:inline">Déconnexion</span>
+							<span className="hidden sm:inline">{t.logout}</span>
 						</button>
 					) : (
 						<button
@@ -134,7 +142,7 @@ export function ClientHeader({
 							}}
 						>
 							<LogOut className="w-4 h-4 rotate-180" />
-							<span className="hidden sm:inline">Connexion</span>
+							<span className="hidden sm:inline">{t.login}</span>
 						</button>
 					)}
 				</div>

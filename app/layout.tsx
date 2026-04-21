@@ -22,6 +22,14 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="fr" className={`${montserrat.variable} bg-background`}>
+			<head>
+				{/* Prevent flash of wrong theme on first load */}
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `try{const t=localStorage.getItem('eventhall-theme');if(t==='light')document.documentElement.classList.add('light');}catch(e){}`,
+					}}
+				/>
+			</head>
 			<body className="bg-background text-foreground font-sans antialiased">
 				<Providers>{children}</Providers>
 			</body>

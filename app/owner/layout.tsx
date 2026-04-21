@@ -4,46 +4,9 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Building2, CalendarDays, TrendingUp, Users } from 'lucide-react'
 import { useApp } from '@/context/app-context'
+import { useLocale } from '@/context/locale-context'
 import { DashboardHeader } from '@/components/shared/dashboard-header'
 import { KpiCard } from '@/components/shared/kpi-card'
-
-const TABS = [
-	{ key: 'overview', label: "Vue d'ensemble" },
-	{ key: 'halls', label: 'Mes Salles' },
-	{ key: 'bookings', label: 'Réservations' },
-	{ key: 'stats', label: 'Statistiques' },
-]
-
-const KPIS = [
-	{
-		label: 'Salles actives',
-		value: '3',
-		icon: Building2,
-		change: '+12%',
-		positive: true,
-	},
-	{
-		label: 'Réservations ce mois',
-		value: '28',
-		icon: CalendarDays,
-		change: '-5%',
-		positive: false,
-	},
-	{
-		label: 'Revenu total',
-		value: '8.5M FCFA',
-		icon: TrendingUp,
-		change: '+23%',
-		positive: true,
-	},
-	{
-		label: "Taux d'occupation",
-		value: '76%',
-		icon: Users,
-		change: '+8%',
-		positive: true,
-	},
-]
 
 export default function OwnerLayout({
 	children,
@@ -51,6 +14,7 @@ export default function OwnerLayout({
 	children: React.ReactNode
 }) {
 	const { role, isHydrated, logout } = useApp()
+	const { t } = useLocale()
 	const router = useRouter()
 
 	useEffect(() => {
@@ -66,10 +30,24 @@ export default function OwnerLayout({
 
 	if (!isHydrated || !role) return null
 
+	const TABS = [
+		{ key: 'overview', label: t.ownerTabOverview },
+		{ key: 'halls', label: t.ownerTabHalls },
+		{ key: 'bookings', label: t.ownerTabBookings },
+		{ key: 'stats', label: t.ownerTabStats },
+	]
+
+	const KPIS = [
+		{ label: t.kpiActiveHalls, value: '3', icon: Building2, change: '+12%', positive: true },
+		{ label: t.kpiMonthlyBookings, value: '28', icon: CalendarDays, change: '-5%', positive: false },
+		{ label: t.kpiTotalRevenue, value: '8.5M FCFA', icon: TrendingUp, change: '+23%', positive: true },
+		{ label: t.kpiOccupancyRate, value: '76%', icon: Users, change: '+8%', positive: true },
+	]
+
 	return (
 		<div className="min-h-screen bg-background">
 			<DashboardHeader
-				subtitle="Espace Propriétaire"
+				subtitle={t.ownerSpace}
 				tabs={TABS}
 				basePath="/owner"
 				onLogout={handleLogout}

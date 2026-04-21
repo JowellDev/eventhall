@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	/* EventHalls Gold & Black Theme */
+	/* EventHalls Gold & Black Theme (dark default) */
 	--background: #0a0a0a;
 	--foreground: #f5f0e8;
 	--card: #1a1a1a;
@@ -30,6 +30,7 @@
 	--surface: #111111;
 	--surface-raised: #1a1a1a;
 	--surface-overlay: #222222;
+	--header-bg: rgba(10, 10, 10, 0.95);
 	--chart-1: #d4af37;
 	--chart-2: #f4c430;
 	--chart-3: #b8922a;
@@ -44,6 +45,31 @@
 	--sidebar-accent-foreground: #f5f0e8;
 	--sidebar-border: #2a2a2a;
 	--sidebar-ring: #d4af37;
+}
+
+/* Light theme overrides */
+.light {
+	--background: #f8f5ef;
+	--foreground: #1a1501;
+	--card: #ffffff;
+	--card-foreground: #1a1501;
+	--popover: #ffffff;
+	--popover-foreground: #1a1501;
+	--secondary: #f0ece0;
+	--secondary-foreground: #1a1501;
+	--muted: #ede8da;
+	--muted-foreground: #6b6045;
+	--border: #ddd5b8;
+	--input: #f5f0e8;
+	--surface: #f5f0e8;
+	--surface-raised: #ffffff;
+	--surface-overlay: #ebe5d5;
+	--header-bg: rgba(248, 245, 239, 0.95);
+	--sidebar: #f5f0e8;
+	--sidebar-foreground: #1a1501;
+	--sidebar-accent: #ede8da;
+	--sidebar-accent-foreground: #1a1501;
+	--sidebar-border: #ddd5b8;
 }
 
 @theme inline {

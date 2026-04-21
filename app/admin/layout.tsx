@@ -2,56 +2,13 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-	Building2,
-	CalendarDays,
-	TrendingUp,
-	UserCog,
-	ShieldCheck,
-} from 'lucide-react'
+import { Building2, CalendarDays, TrendingUp, UserCog, ShieldCheck } from 'lucide-react'
 import { useApp } from '@/context/app-context'
+import { useLocale } from '@/context/locale-context'
 import { DashboardHeader } from '@/components/shared/dashboard-header'
 import { KpiCard } from '@/components/shared/kpi-card'
 
-const TABS = [
-	{ key: 'overview', label: "Vue d'ensemble" },
-	{ key: 'owners', label: 'Propriétaires' },
-	{ key: 'halls', label: 'Salles' },
-	{ key: 'analytics', label: 'Analytiques' },
-]
-
-const KPIS = [
-	{
-		label: 'Propriétaires actifs',
-		value: '45',
-		icon: UserCog,
-		change: '+8%',
-		positive: true,
-	},
-	{
-		label: 'Salles totales',
-		value: '128',
-		icon: Building2,
-		change: '+15%',
-		positive: true,
-	},
-	{
-		label: 'Réservations 30j',
-		value: '856',
-		icon: CalendarDays,
-		change: '+32%',
-		positive: true,
-	},
-	{
-		label: 'Revenu plateforme',
-		value: '42.8M FCFA',
-		icon: TrendingUp,
-		change: '+19%',
-		positive: true,
-	},
-]
-
-const AdminBadge = () => (
+const AdminBadge = ({ label }: { label: string }) => (
 	<div
 		className="hidden md:flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-body font-semibold"
 		style={{
@@ -61,7 +18,7 @@ const AdminBadge = () => (
 		}}
 	>
 		<ShieldCheck className="w-3 h-3" />
-		Super Admin
+		{label}
 	</div>
 )
 
@@ -71,6 +28,7 @@ export default function AdminLayout({
 	children: React.ReactNode
 }) {
 	const { role, isHydrated, logout } = useApp()
+	const { t } = useLocale()
 	const router = useRouter()
 
 	useEffect(() => {
@@ -86,10 +44,24 @@ export default function AdminLayout({
 
 	if (!isHydrated || !role) return null
 
+	const TABS = [
+		{ key: 'overview', label: t.adminTabOverview },
+		{ key: 'owners', label: t.adminTabOwners },
+		{ key: 'halls', label: t.adminTabHalls },
+		{ key: 'analytics', label: t.adminTabAnalytics },
+	]
+
+	const KPIS = [
+		{ label: t.kpiActiveOwners, value: '45', icon: UserCog, change: '+8%', positive: true },
+		{ label: t.kpiTotalHalls, value: '128', icon: Building2, change: '+15%', positive: true },
+		{ label: t.kpiBookings30d, value: '856', icon: CalendarDays, change: '+32%', positive: true },
+		{ label: t.kpiPlatformRevenue, value: '42.8M FCFA', icon: TrendingUp, change: '+19%', positive: true },
+	]
+
 	return (
 		<div className="min-h-screen bg-background">
 			<DashboardHeader
-				badge={<AdminBadge />}
+				badge={<AdminBadge label={t.superAdmin} />}
 				tabs={TABS}
 				basePath="/admin"
 				onLogout={handleLogout}
