@@ -3,6 +3,7 @@
 import { useState, useRef, type ChangeEvent } from 'react'
 import { X, Plus, Upload, ImageIcon, AlertCircle } from 'lucide-react'
 import { useApp } from '@/context/app-context'
+import { useLanguage } from '@/context/language-context'
 import type { Hall } from '@/types'
 
 interface HallFormModalProps {
@@ -15,6 +16,7 @@ export function AddHallModal({
 	onClose,
 }: HallFormModalProps) {
 	const { addHall, updateHall } = useApp()
+	const { t } = useLanguage()
 	const isEdit = !!initialHall
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState('')
@@ -85,7 +87,7 @@ export function AddHallModal({
 		e.preventDefault()
 		setError('')
 		if (!name || !location || !capacity || !pricePerHour || !hours) {
-			setError('Veuillez remplir tous les champs obligatoires.')
+			setError(t('addHall.requiredFields'))
 			return
 		}
 		setLoading(true)
@@ -192,7 +194,7 @@ export function AddHallModal({
 			<div
 				className="relative w-full max-w-xl rounded-2xl border overflow-hidden"
 				style={{
-					background: '#1a1a1a',
+					background: 'var(--card)',
 					borderColor: 'rgba(212,175,55,0.2)',
 					maxHeight: '90vh',
 				}}
@@ -204,7 +206,7 @@ export function AddHallModal({
 					style={{ borderColor: 'rgba(212,175,55,0.1)' }}
 				>
 					<h2 className="font-display text-lg font-bold text-foreground">
-						{isEdit ? 'Modifier la salle' : 'Ajouter une salle'}
+						{isEdit ? t('addHall.editTitle') : t('addHall.addTitle')}
 					</h2>
 					<button
 						onClick={onClose}
@@ -223,7 +225,7 @@ export function AddHallModal({
 						{/* Image upload */}
 						<div>
 							<label className="block text-sm font-medium text-foreground mb-1.5 font-body">
-								Image de la salle
+								{t('addHall.image')}
 							</label>
 							<div
 								className="relative h-36 rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors"
@@ -251,11 +253,10 @@ export function AddHallModal({
 											style={{ color: 'rgba(212,175,55,0.4)' }}
 										/>
 										<p className="text-sm text-muted-foreground font-body">
-											Cliquez pour{' '}
-											{isEdit ? 'changer la photo' : 'ajouter une photo'}
+											{isEdit ? t('addHall.clickToChange') : t('addHall.clickToAdd')}
 										</p>
 										<p className="text-xs text-muted-foreground font-body mt-1">
-											PNG, JPG jusqu'à 5 Mo
+											{t('addHall.imageFormat')}
 										</p>
 									</>
 								)}
@@ -281,7 +282,7 @@ export function AddHallModal({
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
 								<label className="block text-sm font-medium text-foreground mb-1.5 font-body">
-									Nom de la salle <span style={{ color: '#d4af37' }}>*</span>
+									{t('addHall.hallName')} <span style={{ color: '#d4af37' }}>*</span>
 								</label>
 								<input
 									type="text"
@@ -296,7 +297,7 @@ export function AddHallModal({
 							</div>
 							<div>
 								<label className="block text-sm font-medium text-foreground mb-1.5 font-body">
-									Localisation <span style={{ color: '#d4af37' }}>*</span>
+									{t('addHall.location')} <span style={{ color: '#d4af37' }}>*</span>
 								</label>
 								<input
 									type="text"
@@ -315,7 +316,7 @@ export function AddHallModal({
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
 								<label className="block text-sm font-medium text-foreground mb-1.5 font-body">
-									Capacité (personnes){' '}
+									{t('addHall.capacity')}{' '}
 									<span style={{ color: '#d4af37' }}>*</span>
 								</label>
 								<input
@@ -332,7 +333,7 @@ export function AddHallModal({
 							</div>
 							<div>
 								<label className="block text-sm font-medium text-foreground mb-1.5 font-body">
-									Prix/heure (FCFA) <span style={{ color: '#d4af37' }}>*</span>
+									{t('addHall.pricePerHour')} <span style={{ color: '#d4af37' }}>*</span>
 								</label>
 								<input
 									type="number"
@@ -351,7 +352,7 @@ export function AddHallModal({
 						{/* Hours */}
 						<div>
 							<label className="block text-sm font-medium text-foreground mb-1.5 font-body">
-								Horaires d'ouverture <span style={{ color: '#d4af37' }}>*</span>
+								{t('addHall.openingHours')} <span style={{ color: '#d4af37' }}>*</span>
 							</label>
 							<input
 								type="text"
@@ -367,7 +368,7 @@ export function AddHallModal({
 
 						{/* Features */}
 						<TagInput
-							label="Caractéristiques (appuyez sur Entrée pour ajouter)"
+							label={t('addHall.features')}
 							value={featureInput}
 							onChange={setFeatureInput}
 							tags={features}
@@ -375,12 +376,12 @@ export function AddHallModal({
 								addTag(featureInput, features, setFeatures, setFeatureInput)
 							}
 							onRemove={v => removeTag(v, features, setFeatures)}
-							placeholder="Ex: DJ inclus, Parking, Climatisation..."
+							placeholder={t('addHall.featuresPlaceholder')}
 						/>
 
 						{/* Services */}
 						<TagInput
-							label="Services proposés (appuyez sur Entrée pour ajouter)"
+							label={t('addHall.services')}
 							value={serviceInput}
 							onChange={setServiceInput}
 							tags={services}
@@ -388,7 +389,7 @@ export function AddHallModal({
 								addTag(serviceInput, services, setServices, setServiceInput)
 							}
 							onRemove={v => removeTag(v, services, setServices)}
-							placeholder="Ex: Sonorisation professionnelle..."
+							placeholder={t('addHall.servicesPlaceholder')}
 						/>
 
 						{error && (
@@ -412,7 +413,7 @@ export function AddHallModal({
 								className="flex-1 py-3 rounded-xl border text-sm font-body font-medium text-muted-foreground hover:text-foreground transition-colors"
 								style={{ borderColor: 'rgba(212,175,55,0.2)' }}
 							>
-								Annuler
+								{t('common.cancel')}
 							</button>
 							<button
 								type="submit"
@@ -425,10 +426,10 @@ export function AddHallModal({
 								}}
 							>
 								{loading
-									? 'Enregistrement...'
+									? t('addHall.saving')
 									: isEdit
-										? 'Enregistrer les modifications'
-										: 'Ajouter la salle'}
+										? t('addHall.saveChanges')
+										: t('owner.addHall')}
 							</button>
 						</div>
 					</form>

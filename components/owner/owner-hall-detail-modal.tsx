@@ -12,6 +12,7 @@ import {
 	Tag,
 } from 'lucide-react'
 import { AddHallModal } from './add-hall-modal'
+import { useLanguage } from '@/context/language-context'
 import { formatPrice } from '@/lib/mock-data'
 import type { Hall } from '@/types'
 
@@ -24,6 +25,7 @@ export function OwnerHallDetailModal({
 	hall,
 	onClose,
 }: OwnerHallDetailModalProps) {
+	const { t } = useLanguage()
 	const [showEdit, setShowEdit] = useState(false)
 
 	if (showEdit) {
@@ -45,12 +47,12 @@ export function OwnerHallDetailModal({
 			onClick={onClose}
 			role="dialog"
 			aria-modal="true"
-			aria-label={`Détails de ${hall.name}`}
+			aria-label={hall.name}
 		>
 			<div
 				className="relative w-full max-w-xl rounded-2xl border overflow-hidden"
 				style={{
-					background: '#1a1a1a',
+					background: 'var(--card)',
 					borderColor: 'rgba(212,175,55,0.2)',
 					maxHeight: '90vh',
 					overflowY: 'auto',
@@ -79,7 +81,7 @@ export function OwnerHallDetailModal({
 							background: 'rgba(0,0,0,0.7)',
 							backdropFilter: 'blur(8px)',
 						}}
-						aria-label="Fermer"
+						aria-label={t('common.close')}
 					>
 						<X className="w-5 h-5 text-white" />
 					</button>
@@ -109,11 +111,11 @@ export function OwnerHallDetailModal({
 				{/* Info cards */}
 				<div className="p-5 grid grid-cols-3 gap-3">
 					{[
-						{ icon: Users, label: 'Capacité', value: `${hall.capacity} pers.` },
-						{ icon: Clock, label: 'Horaires', value: hall.hours },
+						{ icon: Users, label: t('ownerHallDetail.capacity'), value: `${hall.capacity} ${t('common.persons')}` },
+						{ icon: Clock, label: t('ownerHallDetail.hours'), value: hall.hours },
 						{
 							icon: CreditCard,
-							label: 'Tarif/h',
+							label: t('ownerHallDetail.pricePerHour'),
 							value: formatPrice(hall.pricePerHour),
 						},
 					].map(({ icon: Icon, label, value }) => (
@@ -145,7 +147,7 @@ export function OwnerHallDetailModal({
 						<div className="flex items-center gap-2 mb-3">
 							<Tag className="w-4 h-4" style={{ color: '#d4af37' }} />
 							<h3 className="font-display text-base font-semibold text-foreground">
-								Caractéristiques
+								{t('ownerHallDetail.features')}
 							</h3>
 						</div>
 						<div className="flex flex-wrap gap-2">
@@ -170,7 +172,7 @@ export function OwnerHallDetailModal({
 				{hall.services.length > 0 && (
 					<div className="px-5 pb-5">
 						<h3 className="font-display text-base font-semibold text-foreground mb-3">
-							Services inclus
+							{t('ownerHallDetail.services')}
 						</h3>
 						<ul className="grid grid-cols-1 gap-2">
 							{hall.services.map(s => (
@@ -203,7 +205,7 @@ export function OwnerHallDetailModal({
 						}}
 					>
 						<Pencil className="w-4 h-4" />
-						Modifier cette salle
+						{t('ownerHallDetail.editHall')}
 					</button>
 				</div>
 			</div>

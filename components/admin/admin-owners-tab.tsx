@@ -7,6 +7,7 @@ import { Pagination } from '@/components/shared/pagination'
 import { usePagination } from '@/hooks/use-pagination'
 import { OwnerModal } from '@/components/admin/owner-modal'
 import { useApp } from '@/context/app-context'
+import { useLanguage } from '@/context/language-context'
 import type { Owner } from '@/types'
 
 type ModalState =
@@ -17,6 +18,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 25]
 
 export function AdminOwnersTab() {
 	const { owners, addOwner, updateOwner } = useApp()
+	const { t } = useLanguage()
 	const [modal, setModal] = useState<ModalState>({ open: false })
 
 	const {
@@ -53,7 +55,7 @@ export function AdminOwnersTab() {
 		<div>
 			<div className="flex items-center justify-between mb-6">
 				<h2 className="font-display text-xl font-semibold text-foreground">
-					Tous les propriétaires
+					{t('admin.allOwners')}
 				</h2>
 				<button
 					onClick={openCreate}
@@ -63,7 +65,7 @@ export function AdminOwnersTab() {
 						color: '#0a0a0a',
 					}}
 				>
-					+ Ajouter
+					{t('admin.addOwner')}
 				</button>
 			</div>
 
@@ -73,7 +75,7 @@ export function AdminOwnersTab() {
 						key={owner.id}
 						className="flex flex-col md:flex-row md:items-center gap-4 rounded-2xl p-5 border"
 						style={{
-							background: '#1a1a1a',
+							background: 'var(--card)',
 							borderColor: 'rgba(212,175,55,0.12)',
 						}}
 					>
@@ -97,11 +99,11 @@ export function AdminOwnersTab() {
 						</div>
 						<div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm font-body">
 							<div>
-								<p className="text-muted-foreground text-xs mb-0.5">Salles</p>
+								<p className="text-muted-foreground text-xs mb-0.5">{t('ownerModal.halls')}</p>
 								<p className="font-semibold text-foreground">{owner.halls}</p>
 							</div>
 							<div>
-								<p className="text-muted-foreground text-xs mb-0.5">Revenus</p>
+								<p className="text-muted-foreground text-xs mb-0.5">{t('admin.revenues')}</p>
 								<p className="font-semibold gold-gradient-text">
 									{owner.revenue}
 								</p>
@@ -115,7 +117,7 @@ export function AdminOwnersTab() {
 										borderColor: 'rgba(212,175,55,0.2)',
 										color: 'var(--muted-foreground)',
 									}}
-									aria-label="Voir"
+									aria-label={t('common.view')}
 								>
 									<Eye className="w-4 h-4" />
 								</button>
@@ -126,7 +128,7 @@ export function AdminOwnersTab() {
 										borderColor: 'rgba(212,175,55,0.2)',
 										color: 'var(--muted-foreground)',
 									}}
-									aria-label="Modifier"
+									aria-label={t('common.edit')}
 								>
 									<Pencil className="w-4 h-4" />
 								</button>

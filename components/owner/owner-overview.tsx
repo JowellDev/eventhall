@@ -1,38 +1,39 @@
+'use client'
+
 import { BarChart3, Activity, Star } from 'lucide-react'
 import { BarChart } from '@/components/shared/bar-chart'
+import { useLanguage } from '@/context/language-context'
 import { halls } from '@/lib/mock-data'
 
-const revenueData = [
-	{ label: 'Lun', value: 65 },
-	{ label: 'Mar', value: 82 },
-	{ label: 'Mer', value: 45 },
-	{ label: 'Jeu', value: 91 },
-	{ label: 'Ven', value: 78 },
-	{ label: 'Sam', value: 95 },
-	{ label: 'Dim', value: 60 },
-]
-
 const recentActivity = [
-	{ text: 'Nouvelle réservation pour Le Grand Palais', time: 'Il y a 2h' },
-	{ text: 'Paiement reçu de Bamba Seydou — 900,000 FCFA', time: 'Il y a 5h' },
-	{ text: 'Avis 5 étoiles sur Espace Royal', time: 'Hier' },
-	{ text: 'Réservation annulée — Villa Lumière', time: 'Hier' },
+	{ textKey: 'Nouvelle réservation pour Le Grand Palais', time: 'Il y a 2h' },
+	{ textKey: 'Paiement reçu de Bamba Seydou — 900,000 FCFA', time: 'Il y a 5h' },
+	{ textKey: 'Avis 5 étoiles sur Espace Royal', time: 'Hier' },
+	{ textKey: 'Réservation annulée — Villa Lumière', time: 'Hier' },
 ]
 
+const REVENUE_VALUES = [65, 82, 45, 91, 78, 95, 60]
 const RANK_COLORS = ['#f4c430', '#c0c0c0', '#cd7f32']
 
 export function OwnerOverview() {
+	const { t } = useLanguage()
+
+	const revenueData = REVENUE_VALUES.map((value, i) => ({
+		label: t(`days.${i}` as Parameters<typeof t>[0]),
+		value,
+	}))
+
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			{/* Revenue Chart */}
 			<div
 				className="lg:col-span-2 rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-6">
 					<BarChart3 className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h2 className="font-display text-base font-semibold text-foreground">
-						Revenus — 7 derniers jours
+						{t('owner.revenue')}
 					</h2>
 				</div>
 				<BarChart data={revenueData} height={140} />
@@ -41,12 +42,12 @@ export function OwnerOverview() {
 			{/* Activity Feed */}
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-5">
 					<Activity className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h2 className="font-display text-base font-semibold text-foreground">
-						Activité récente
+						{t('owner.recentActivity')}
 					</h2>
 				</div>
 				<ul className="space-y-4">
@@ -59,7 +60,7 @@ export function OwnerOverview() {
 							/>
 							<div>
 								<p className="text-sm font-body text-foreground leading-snug">
-									{item.text}
+									{item.textKey}
 								</p>
 								<p className="text-xs text-muted-foreground font-body mt-0.5">
 									{item.time}
@@ -73,17 +74,17 @@ export function OwnerOverview() {
 			{/* Top Halls */}
 			<div
 				className="lg:col-span-3 rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<h2 className="font-display text-base font-semibold text-foreground mb-4">
-					Top Salles
+					{t('owner.topHalls')}
 				</h2>
 				<div className="space-y-3">
 					{halls.map((hall, i) => (
 						<div
 							key={hall.id}
 							className="flex items-center gap-4 p-3 rounded-xl"
-							style={{ background: '#111' }}
+							style={{ background: 'var(--surface)' }}
 						>
 							<span
 								className="font-display text-2xl font-bold w-8 text-center"

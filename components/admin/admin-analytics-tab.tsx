@@ -1,14 +1,10 @@
+'use client'
+
 import { BarChart3 } from 'lucide-react'
 import { BarChart } from '@/components/shared/bar-chart'
+import { useLanguage } from '@/context/language-context'
 
-const platformStats = [
-	{ label: 'Jan', value: 62 },
-	{ label: 'Fév', value: 75 },
-	{ label: 'Mar', value: 68 },
-	{ label: 'Avr', value: 91 },
-	{ label: 'Mai', value: 84 },
-	{ label: 'Jun', value: 97 },
-]
+const MONTHLY_VALUES = [62, 75, 68, 91, 84, 97]
 
 const zones = [
 	{ zone: 'Cocody', pct: 35 },
@@ -27,20 +23,27 @@ const eventTypes = [
 ]
 
 export function AdminAnalyticsTab() {
+	const { t } = useLanguage()
+
+	const platformStats = MONTHLY_VALUES.map((value, i) => ({
+		label: t(`months.${i}` as Parameters<typeof t>[0]).slice(0, 3),
+		value,
+	}))
+
 	return (
 		<div className="space-y-6">
 			<h2 className="font-display text-xl font-semibold text-foreground">
-				Analytiques globales
+				{t('admin.globalAnalytics')}
 			</h2>
 
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-6">
 					<BarChart3 className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h3 className="font-display text-base font-semibold text-foreground">
-						Réservations mensuelles — 2025
+						{t('admin.monthlyBookings')}
 					</h3>
 				</div>
 				<BarChart data={platformStats} height={180} showTopLabel />
@@ -51,12 +54,12 @@ export function AdminAnalyticsTab() {
 				<div
 					className="rounded-2xl p-5 border"
 					style={{
-						background: '#1a1a1a',
+						background: 'var(--card)',
 						borderColor: 'rgba(212,175,55,0.12)',
 					}}
 				>
 					<h3 className="font-display text-base font-semibold text-foreground mb-4">
-						Répartition par zone
+						{t('admin.zoneDistribution')}
 					</h3>
 					<div className="space-y-3">
 						{zones.map(({ zone, pct }) => (
@@ -67,7 +70,7 @@ export function AdminAnalyticsTab() {
 								</div>
 								<div
 									className="h-1.5 rounded-full"
-									style={{ background: '#111' }}
+									style={{ background: 'var(--surface)' }}
 								>
 									<div
 										className="h-full rounded-full"
@@ -86,12 +89,12 @@ export function AdminAnalyticsTab() {
 				<div
 					className="rounded-2xl p-5 border"
 					style={{
-						background: '#1a1a1a',
+						background: 'var(--card)',
 						borderColor: 'rgba(212,175,55,0.12)',
 					}}
 				>
 					<h3 className="font-display text-base font-semibold text-foreground mb-4">
-						Types d&apos;événements
+						{t('admin.eventTypes')}
 					</h3>
 					<div className="space-y-3">
 						{eventTypes.map(({ type, count, color }) => (

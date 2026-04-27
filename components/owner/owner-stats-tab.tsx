@@ -1,29 +1,31 @@
+'use client'
+
 import { BarChart } from '@/components/shared/bar-chart'
+import { useLanguage } from '@/context/language-context'
 import { halls } from '@/lib/mock-data'
 
-const revenueData = [
-	{ label: 'Lun', value: 65 },
-	{ label: 'Mar', value: 82 },
-	{ label: 'Mer', value: 45 },
-	{ label: 'Jeu', value: 91 },
-	{ label: 'Ven', value: 78 },
-	{ label: 'Sam', value: 95 },
-	{ label: 'Dim', value: 60 },
-]
+const REVENUE_VALUES = [65, 82, 45, 91, 78, 95, 60]
 
 export function OwnerStatsTab() {
+	const { t } = useLanguage()
+
+	const revenueData = REVENUE_VALUES.map((value, i) => ({
+		label: t(`days.${i}` as Parameters<typeof t>[0]),
+		value,
+	}))
+
 	return (
 		<div className="space-y-6">
 			<h2 className="font-display text-xl font-semibold text-foreground">
-				Statistiques
+				{t('owner.stats')}
 			</h2>
 
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<h3 className="font-display text-base font-semibold text-foreground mb-6">
-					Revenus hebdomadaires
+					{t('owner.weeklyRevenue')}
 				</h3>
 				<BarChart data={revenueData} height={180} showTopLabel />
 			</div>
@@ -34,7 +36,7 @@ export function OwnerStatsTab() {
 						key={hall.id}
 						className="rounded-2xl p-5 border"
 						style={{
-							background: '#1a1a1a',
+							background: 'var(--card)',
 							borderColor: 'rgba(212,175,55,0.12)',
 						}}
 					>
@@ -44,20 +46,20 @@ export function OwnerStatsTab() {
 						<div className="space-y-2 text-sm font-body">
 							<div className="flex justify-between">
 								<span className="text-muted-foreground">
-									Taux d&apos;occupation
+									{t('owner.occupancyRate')}
 								</span>
 								<span className="text-foreground font-semibold">
 									{70 + (hall.id.charCodeAt(0) % 20)}%
 								</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-muted-foreground">Réservations</span>
+								<span className="text-muted-foreground">{t('owner.bookingsCount')}</span>
 								<span className="text-foreground font-semibold">
 									{8 + parseInt(hall.id) * 4}
 								</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-muted-foreground">Note moyenne</span>
+								<span className="text-muted-foreground">{t('owner.avgRating')}</span>
 								<span className="gold-gradient-text font-bold">
 									{hall.rating}
 								</span>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Search, X, MapPin, Users, Star } from 'lucide-react'
 import { useApp } from '@/context/app-context'
+import { useLanguage } from '@/context/language-context'
 import { formatPrice } from '@/lib/mock-data'
 import type { Hall } from '@/types'
 
@@ -13,6 +14,7 @@ interface SearchOverlayProps {
 
 export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 	const { halls } = useApp()
+	const { t } = useLanguage()
 	const [query, setQuery] = useState('')
 	const inputRef = useRef<HTMLInputElement>(null)
 
@@ -47,7 +49,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 		<div
 			className="fixed inset-0 z-50 flex flex-col"
 			style={{
-				background: 'rgba(10,10,10,0.97)',
+				background: 'var(--background)',
 				backdropFilter: 'blur(16px)',
 			}}
 		>
@@ -66,7 +68,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 						type="text"
 						value={query}
 						onChange={e => setQuery(e.target.value)}
-						placeholder="Rechercher une salle, un quartier, une caractéristique…"
+						placeholder={t('search.overlayPlaceholder')}
 						className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-body text-base"
 					/>
 					{query && (
@@ -82,7 +84,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 						className="px-3 py-1.5 rounded-lg border text-sm font-body text-muted-foreground hover:text-foreground transition-colors"
 						style={{ borderColor: 'rgba(212,175,55,0.2)' }}
 					>
-						Fermer
+						{t('common.close')}
 					</button>
 				</div>
 			</div>
@@ -92,17 +94,17 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 				<div className="max-w-2xl mx-auto">
 					{query.trim() && (
 						<p className="text-xs font-body text-muted-foreground mb-4">
-							{results.length} résultat{results.length !== 1 ? 's' : ''} pour
+							{results.length} {results.length !== 1 ? t('pagination.results') : t('pagination.result')} {t('search.for')}
 							&ldquo;{query}&rdquo;
 						</p>
 					)}
 					{results.length === 0 ? (
 						<div className="text-center py-16">
 							<p className="font-display font-semibold text-foreground mb-1">
-								Aucun résultat
+								{t('search.noResults')}
 							</p>
 							<p className="text-muted-foreground font-body text-sm">
-								Essayez un autre terme de recherche.
+								{t('search.noResultsDesc')}
 							</p>
 						</div>
 					) : (
@@ -113,7 +115,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 									onClick={() => handleSelect(hall)}
 									className="w-full flex items-center gap-4 p-4 rounded-2xl border text-left transition-all hover:border-gold/40"
 									style={{
-										background: '#1a1a1a',
+										background: 'var(--card)',
 										borderColor: 'rgba(212,175,55,0.12)',
 									}}
 								>
@@ -145,7 +147,7 @@ export function SearchOverlay({ onClose, onSelect }: SearchOverlayProps) {
 												<MapPin className="w-3 h-3" /> {hall.location}
 											</span>
 											<span className="flex items-center gap-1">
-												<Users className="w-3 h-3" /> {hall.capacity} pers.
+												<Users className="w-3 h-3" /> {hall.capacity} {t('common.persons')}
 											</span>
 										</div>
 										{hall.features.length > 0 && (

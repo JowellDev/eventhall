@@ -1,5 +1,8 @@
+'use client'
+
 import { Users, Globe, Star } from 'lucide-react'
 import { halls } from '@/lib/mock-data'
+import { useLanguage } from '@/context/language-context'
 
 const owners = [
 	{
@@ -32,27 +35,29 @@ const owners = [
 	},
 ]
 
-const quickStats = [
-	{ label: "Taux d'approbation", value: '94%', color: '#34d399' },
-	{ label: 'Temps de réponse moyen', value: '2.4h', color: '#60a5fa' },
-	{ label: 'Satisfaction client', value: '4.8/5', color: '#d4af37' },
-	{ label: 'Litiges ouverts', value: '3', color: '#f87171' },
-]
-
 const RANK_COLORS = ['#f4c430', '#c0c0c0', '#cd7f32']
 
 export function AdminOverview() {
+	const { t } = useLanguage()
+
+	const quickStats = [
+		{ label: t('admin.approvalRate'), value: '94%', color: '#34d399' },
+		{ label: t('admin.avgResponseTime'), value: '2.4h', color: '#60a5fa' },
+		{ label: t('admin.clientSatisfaction'), value: '4.8/5', color: '#d4af37' },
+		{ label: t('admin.openDisputes'), value: '3', color: '#f87171' },
+	]
+
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 			{/* Recent Owners */}
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-5">
 					<Users className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h2 className="font-display text-base font-semibold text-foreground">
-						Propriétaires récents
+						{t('admin.recentOwners')}
 					</h2>
 				</div>
 				<ul className="space-y-3">
@@ -72,7 +77,7 @@ export function AdminOverview() {
 									{owner.name}
 								</p>
 								<p className="text-xs text-muted-foreground font-body">
-									{owner.halls} salle{owner.halls > 1 ? 's' : ''} ·{' '}
+									{owner.halls} {t('admin.halls').toLowerCase()}{owner.halls > 1 ? 's' : ''} ·{' '}
 									{owner.revenue}
 								</p>
 							</div>
@@ -84,12 +89,12 @@ export function AdminOverview() {
 			{/* Top Halls */}
 			<div
 				className="rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 			>
 				<div className="flex items-center gap-2 mb-5">
 					<Globe className="w-5 h-5" style={{ color: '#d4af37' }} />
 					<h2 className="font-display text-base font-semibold text-foreground">
-						Salles performantes
+						{t('admin.performingHalls')}
 					</h2>
 				</div>
 				<ul className="space-y-3">
@@ -134,7 +139,7 @@ export function AdminOverview() {
 					<div
 						key={label}
 						className="rounded-xl p-4 border text-center"
-						style={{ background: '#111', borderColor: 'rgba(212,175,55,0.1)' }}
+						style={{ background: 'var(--surface)', borderColor: 'rgba(212,175,55,0.1)' }}
 					>
 						<p
 							className="font-display text-2xl font-bold mb-1"

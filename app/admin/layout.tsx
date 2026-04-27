@@ -10,46 +10,9 @@ import {
 	ShieldCheck,
 } from 'lucide-react'
 import { useApp } from '@/context/app-context'
+import { useLanguage } from '@/context/language-context'
 import { DashboardHeader } from '@/components/shared/dashboard-header'
 import { KpiCard } from '@/components/shared/kpi-card'
-
-const TABS = [
-	{ key: 'overview', label: "Vue d'ensemble" },
-	{ key: 'owners', label: 'Propriétaires' },
-	{ key: 'halls', label: 'Salles' },
-	{ key: 'analytics', label: 'Analytiques' },
-]
-
-const KPIS = [
-	{
-		label: 'Propriétaires actifs',
-		value: '45',
-		icon: UserCog,
-		change: '+8%',
-		positive: true,
-	},
-	{
-		label: 'Salles totales',
-		value: '128',
-		icon: Building2,
-		change: '+15%',
-		positive: true,
-	},
-	{
-		label: 'Réservations 30j',
-		value: '856',
-		icon: CalendarDays,
-		change: '+32%',
-		positive: true,
-	},
-	{
-		label: 'Revenu plateforme',
-		value: '42.8M FCFA',
-		icon: TrendingUp,
-		change: '+19%',
-		positive: true,
-	},
-]
 
 const AdminBadge = () => (
 	<div
@@ -71,6 +34,7 @@ export default function AdminLayout({
 	children: React.ReactNode
 }) {
 	const { role, isHydrated, logout } = useApp()
+	const { t } = useLanguage()
 	const router = useRouter()
 
 	useEffect(() => {
@@ -85,6 +49,44 @@ export default function AdminLayout({
 	}
 
 	if (!isHydrated || !role) return null
+
+	const TABS = [
+		{ key: 'overview', label: t('admin.overview') },
+		{ key: 'owners', label: t('admin.owners') },
+		{ key: 'halls', label: t('admin.halls') },
+		{ key: 'analytics', label: t('admin.analytics') },
+	]
+
+	const KPIS = [
+		{
+			label: t('admin.kpi.activeOwners'),
+			value: '45',
+			icon: UserCog,
+			change: '+8%',
+			positive: true,
+		},
+		{
+			label: t('admin.kpi.totalHalls'),
+			value: '128',
+			icon: Building2,
+			change: '+15%',
+			positive: true,
+		},
+		{
+			label: t('admin.kpi.bookings30d'),
+			value: '856',
+			icon: CalendarDays,
+			change: '+32%',
+			positive: true,
+		},
+		{
+			label: t('admin.kpi.platformRevenue'),
+			value: '42.8M FCFA',
+			icon: TrendingUp,
+			change: '+19%',
+			positive: true,
+		},
+	]
 
 	return (
 		<div className="min-h-screen bg-background">

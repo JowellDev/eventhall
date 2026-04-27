@@ -8,6 +8,7 @@ import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { Pagination } from '@/components/shared/pagination'
 import { usePagination } from '@/hooks/use-pagination'
 import { useApp } from '@/context/app-context'
+import { useLanguage } from '@/context/language-context'
 import { formatPrice } from '@/lib/mock-data'
 import type { Hall } from '@/types'
 
@@ -15,6 +16,7 @@ const PAGE_SIZE_OPTIONS = [6, 12, 24]
 
 export function OwnerHallsTab() {
 	const { halls, deleteHall } = useApp()
+	const { t } = useLanguage()
 	const [showAddModal, setShowAddModal] = useState(false)
 	const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
 	const [editHall, setEditHall] = useState<Hall | null>(null)
@@ -36,7 +38,7 @@ export function OwnerHallsTab() {
 		<div>
 			<div className="flex items-center justify-between mb-6">
 				<h2 className="font-display text-xl font-semibold text-foreground">
-					Mes Salles
+					{t('owner.halls')}
 				</h2>
 				<button
 					onClick={() => setShowAddModal(true)}
@@ -46,14 +48,14 @@ export function OwnerHallsTab() {
 						color: '#0a0a0a',
 					}}
 				>
-					+ Ajouter une salle
+					{t('owner.addHall')}
 				</button>
 			</div>
 
 			{halls.length === 0 ? (
 				<div className="flex flex-col items-center justify-center py-20 text-center">
 					<p className="text-muted-foreground font-body text-sm">
-						Aucune salle pour l'instant. Ajoutez votre première salle !
+						{t('owner.noHalls')}
 					</p>
 				</div>
 			) : (
@@ -64,7 +66,7 @@ export function OwnerHallsTab() {
 								key={hall.id}
 								className="rounded-2xl overflow-hidden border"
 								style={{
-									background: '#1a1a1a',
+									background: 'var(--card)',
 									borderColor: 'rgba(212,175,55,0.12)',
 								}}
 							>
@@ -99,7 +101,7 @@ export function OwnerHallsTab() {
 										{hall.name}
 									</h3>
 									<p className="text-muted-foreground text-sm font-body mb-1">
-										{hall.location} · {hall.capacity} personnes
+										{hall.location} · {hall.capacity} {t('owner.persons')}
 									</p>
 									<p
 										className="text-xs font-body mb-4"
@@ -116,7 +118,7 @@ export function OwnerHallsTab() {
 												color: 'var(--muted-foreground)',
 											}}
 										>
-											<Eye className="w-3.5 h-3.5" /> Voir
+											<Eye className="w-3.5 h-3.5" /> {t('common.view')}
 										</button>
 										<button
 											onClick={() => setEditHall(hall)}
@@ -126,7 +128,7 @@ export function OwnerHallsTab() {
 												color: 'var(--muted-foreground)',
 											}}
 										>
-											<Pencil className="w-3.5 h-3.5" /> Modifier
+											<Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
 										</button>
 										<button
 											onClick={() => setDeleteTarget(hall)}
@@ -135,7 +137,7 @@ export function OwnerHallsTab() {
 												borderColor: 'rgba(212,175,55,0.12)',
 												color: 'var(--muted-foreground)',
 											}}
-											aria-label={`Supprimer ${hall.name}`}
+											aria-label={`${t('common.delete')} ${hall.name}`}
 										>
 											<Trash2 className="w-3.5 h-3.5" />
 										</button>
@@ -170,16 +172,15 @@ export function OwnerHallsTab() {
 			)}
 			{deleteTarget && (
 				<ConfirmDialog
-					title="Supprimer la salle ?"
+					title={t('deleteHall.title')}
 					message={
 						<>
-							Vous êtes sur le point de supprimer{' '}
-							<strong className="text-foreground">{deleteTarget.name}</strong>.
-							Cette action est irréversible et supprimera toutes les données
-							associées.
+							{t('deleteHall.message')}{' '}
+							<strong className="text-foreground">{deleteTarget.name}</strong>.{' '}
+							{t('deleteHall.warning')}
 						</>
 					}
-					confirmLabel="Supprimer"
+					confirmLabel={t('deleteHall.confirm')}
 					variant="danger"
 					onClose={() => setDeleteTarget(null)}
 					onConfirm={() => {

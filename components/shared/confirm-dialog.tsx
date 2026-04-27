@@ -1,6 +1,7 @@
 'use client'
 
 import { AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { useLanguage } from '@/context/language-context'
 import type { ReactNode } from 'react'
 
 interface ConfirmDialogProps {
@@ -21,6 +22,7 @@ export function ConfirmDialog({
 	onConfirm,
 }: ConfirmDialogProps) {
 	const isDanger = variant === 'danger'
+	const { t } = useLanguage()
 
 	return (
 		<div
@@ -30,7 +32,7 @@ export function ConfirmDialog({
 		>
 			<div
 				className="w-full max-w-sm rounded-2xl p-6 border"
-				style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.2)' }}
+				style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.2)' }}
 				onClick={e => e.stopPropagation()}
 			>
 				<div
@@ -59,7 +61,7 @@ export function ConfirmDialog({
 						className="flex-1 py-3 rounded-xl border text-sm font-body font-medium text-muted-foreground hover:text-foreground transition-colors"
 						style={{ borderColor: 'rgba(212,175,55,0.2)' }}
 					>
-						Annuler
+						{t('common.cancel')}
 					</button>
 					<button
 						onClick={onConfirm}

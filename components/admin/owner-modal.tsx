@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { X, Building2, Mail, Phone, Calendar } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/status-badge'
+import { useLanguage } from '@/context/language-context'
 import type { Owner, OwnerStatus } from '@/types'
 
 type ModalMode = 'view' | 'create' | 'edit'
@@ -14,10 +15,12 @@ interface OwnerModalProps {
 	onSave: (data: Omit<Owner, 'id'> & { id?: string }) => void
 }
 
-const STATUS_OPTIONS: { value: OwnerStatus; label: string }[] = [
-	{ value: 'active', label: 'Actif' },
-	{ value: 'pending', label: 'En attente' },
-	{ value: 'suspended', label: 'Suspendu' },
+type StatusOption = { value: OwnerStatus; labelKey: 'ownerModal.active' | 'ownerModal.pending' | 'ownerModal.suspended' }
+
+const STATUS_OPTIONS: StatusOption[] = [
+	{ value: 'active', labelKey: 'ownerModal.active' },
+	{ value: 'pending', labelKey: 'ownerModal.pending' },
+	{ value: 'suspended', labelKey: 'ownerModal.suspended' },
 ]
 
 const inputClass =
@@ -30,8 +33,8 @@ const blurStyle = 'rgba(212,175,55,0.2)'
 const labelClass =
 	'block text-xs font-semibold text-muted-foreground font-body mb-1.5 uppercase tracking-wide'
 
-function formatJoinedDate(dateStr: string) {
-	return new Date(dateStr).toLocaleDateString('fr-FR', {
+function formatJoinedDate(dateStr: string, locale: string) {
+	return new Date(dateStr).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', {
 		day: 'numeric',
 		month: 'long',
 		year: 'numeric',
@@ -39,6 +42,7 @@ function formatJoinedDate(dateStr: string) {
 }
 
 export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
+	const { t, locale } = useLanguage()
 	const isView = mode === 'view'
 	const isEdit = mode === 'edit'
 	const isCreate = mode === 'create'
@@ -50,20 +54,20 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 	const [error, setError] = useState('')
 
 	const title = isCreate
-		? 'Nouveau propriétaire'
+		? t('ownerModal.newOwner')
 		: isEdit
-			? 'Modifier le propriétaire'
-			: 'Profil du propriétaire'
+			? t('ownerModal.editOwner')
+			: t('ownerModal.ownerProfile')
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 		if (!name.trim() || !email.trim() || !phone.trim()) {
-			setError('Veuillez remplir tous les champs obligatoires.')
+			setError(t('ownerModal.fillRequired'))
 			return
 		}
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 		if (!emailRegex.test(email)) {
-			setError('Adresse email invalide.')
+			setError(t('ownerModal.invalidEmail'))
 			return
 		}
 		onSave({
@@ -86,7 +90,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 		>
 			<div
 				className="relative w-full max-w-md rounded-2xl border p-6 shadow-2xl"
-				style={{ background: '#111', borderColor: 'rgba(212,175,55,0.2)' }}
+				style={{ background: 'var(--surface)', borderColor: 'rgba(212,175,55,0.2)' }}
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between mb-6">
@@ -97,7 +101,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 						onClick={onClose}
 						className="p-1.5 rounded-lg text-muted-foreground transition-colors hover:text-foreground"
 						style={{ background: 'rgba(255,255,255,0.05)' }}
-						aria-label="Fermer"
+						aria-label={t('common.close')}
 					>
 						<X className="w-4 h-4" />
 					</button>
@@ -149,7 +153,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 									style={{ color: '#d4af37' }}
 								/>
 								<span className="text-muted-foreground">
-									Membre depuis {formatJoinedDate(owner.joinedAt)}
+									{t('ownerModal.memberSince')} {formatJoinedDate(owner.joinedAt, locale)}
 								</span>
 							</div>
 						</div>
@@ -162,7 +166,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 							<div
 								className="rounded-xl p-4 text-center border"
 								style={{
-									background: '#1a1a1a',
+									background: 'var(--card)',
 									borderColor: 'rgba(212,175,55,0.12)',
 								}}
 							>
@@ -174,13 +178,13 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 									{owner.halls}
 								</p>
 								<p className="text-xs text-muted-foreground font-body mt-0.5">
-									Salles
+									{t('ownerModal.halls')}
 								</p>
 							</div>
 							<div
 								className="rounded-xl p-4 text-center border"
 								style={{
-									background: '#1a1a1a',
+									background: 'var(--card)',
 									borderColor: 'rgba(212,175,55,0.12)',
 								}}
 							>
@@ -191,7 +195,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 									{owner.revenue}
 								</p>
 								<p className="text-xs text-muted-foreground font-body mt-0.5">
-									Revenus totaux
+									{t('ownerModal.totalRevenue')}
 								</p>
 							</div>
 						</div>
@@ -205,7 +209,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 								border: '1px solid rgba(212,175,55,0.3)',
 							}}
 						>
-							Fermer
+							{t('common.close')}
 						</button>
 					</div>
 				)}
@@ -214,7 +218,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 				{(isCreate || isEdit) && (
 					<form onSubmit={handleSubmit} className="space-y-4">
 						<div>
-							<label className={labelClass}>Nom complet *</label>
+							<label className={labelClass}>{t('ownerModal.fullName')}</label>
 							<input
 								type="text"
 								value={name}
@@ -228,7 +232,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 						</div>
 
 						<div>
-							<label className={labelClass}>Adresse email *</label>
+							<label className={labelClass}>{t('ownerModal.email')}</label>
 							<input
 								type="email"
 								value={email}
@@ -242,7 +246,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 						</div>
 
 						<div>
-							<label className={labelClass}>Téléphone *</label>
+							<label className={labelClass}>{t('ownerModal.phone')}</label>
 							<input
 								type="tel"
 								value={phone}
@@ -256,7 +260,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 						</div>
 
 						<div>
-							<label className={labelClass}>Statut</label>
+							<label className={labelClass}>{t('ownerModal.status')}</label>
 							<select
 								value={status}
 								onChange={e => setStatus(e.target.value as OwnerStatus)}
@@ -269,9 +273,9 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 									<option
 										key={opt.value}
 										value={opt.value}
-										style={{ background: '#111' }}
+										style={{ background: 'var(--surface)' }}
 									>
-										{opt.label}
+										{t(opt.labelKey)}
 									</option>
 								))}
 							</select>
@@ -293,7 +297,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 									color: 'var(--muted-foreground)',
 								}}
 							>
-								Annuler
+								{t('common.cancel')}
 							</button>
 							<button
 								type="submit"
@@ -303,7 +307,7 @@ export function OwnerModal({ mode, owner, onClose, onSave }: OwnerModalProps) {
 									color: '#0a0a0a',
 								}}
 							>
-								{isCreate ? 'Créer' : 'Enregistrer'}
+								{isCreate ? t('ownerModal.create') : t('common.save')}
 							</button>
 						</div>
 					</form>

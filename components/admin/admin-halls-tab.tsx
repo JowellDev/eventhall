@@ -6,6 +6,7 @@ import { halls, formatPrice } from '@/lib/mock-data'
 import { Pagination } from '@/components/shared/pagination'
 import { usePagination } from '@/hooks/use-pagination'
 import { HallDetailModal } from '@/components/halls/hall-detail-modal'
+import { useLanguage } from '@/context/language-context'
 import type { Hall } from '@/types'
 
 const ALL_HALLS = [...halls, ...halls].slice(0, 6)
@@ -25,11 +26,12 @@ export function AdminHallsTab() {
 	} = usePagination(ALL_HALLS, 6)
 
 	const [selectedHall, setSelectedHall] = useState<Hall | null>(null)
+	const { t } = useLanguage()
 
 	return (
 		<div>
 			<h2 className="font-display text-xl font-semibold text-foreground mb-6">
-				Toutes les salles
+				{t('admin.allHalls')}
 			</h2>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 				{paginatedItems.map((hall, i) => (
@@ -37,7 +39,7 @@ export function AdminHallsTab() {
 						key={`${hall.id}-${i}`}
 						className="rounded-2xl overflow-hidden border"
 						style={{
-							background: '#1a1a1a',
+							background: 'var(--card)',
 							borderColor: 'rgba(212,175,55,0.12)',
 						}}
 					>
@@ -74,7 +76,7 @@ export function AdminHallsTab() {
 									{hall.name}
 								</p>
 								<p className="text-xs text-muted-foreground font-body">
-									{hall.capacity} pers. · {formatPrice(hall.pricePerHour)}/h
+									{hall.capacity} {t('common.persons')} · {formatPrice(hall.pricePerHour)}/h
 								</p>
 							</div>
 							<button
@@ -84,7 +86,7 @@ export function AdminHallsTab() {
 									borderColor: 'rgba(212,175,55,0.2)',
 									color: 'var(--muted-foreground)',
 								}}
-								aria-label={`Voir les détails de ${hall.name}`}
+								aria-label={`${t('common.view')} ${hall.name}`}
 							>
 								<Eye className="w-4 h-4" />
 							</button>

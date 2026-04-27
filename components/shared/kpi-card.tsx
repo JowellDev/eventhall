@@ -18,7 +18,7 @@ export function KpiCard({
 	return (
 		<div
 			className="rounded-2xl p-4 sm:p-5 border"
-			style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.12)' }}
+			style={{ background: 'var(--card)', borderColor: 'rgba(212,175,55,0.12)' }}
 		>
 			<div className="flex items-center justify-between mb-3">
 				<div

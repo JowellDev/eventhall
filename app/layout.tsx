@@ -21,7 +21,7 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="fr" className={`${montserrat.variable} bg-background`}>
+		<html lang="fr" className={montserrat.variable} suppressHydrationWarning>
 			<body className="bg-background text-foreground font-sans antialiased">
 				<Providers>{children}</Providers>
 			</body>
